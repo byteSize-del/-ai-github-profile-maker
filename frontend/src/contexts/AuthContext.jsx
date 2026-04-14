@@ -40,7 +40,7 @@ export function AuthProvider({ children }) {
     }
   }, []);
 
-  const login = useCallback(async (code) => {
+  const login = useCallback(async (code, state) => {
     try {
       setLoading(true);
       setError(null);
@@ -48,8 +48,8 @@ export function AuthProvider({ children }) {
       const response = await fetch(`${apiUrl}/api/auth/callback`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ code }),
+        credentials: 'include',  // Send oauth_state cookie
+        body: JSON.stringify({ code, state }),  // Include state for CSRF validation
       });
 
       if (!response.ok) {

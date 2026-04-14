@@ -23,16 +23,17 @@ function LoginPage() {
   }, [searchParams]);
 
   const handleGitHubCallback = async (code) => {
+    const state = searchParams.get('state');
     try {
       setLoginError(null);
-      await login(code);
+      await login(code, state);  // Pass state to login
       navigate('/generate');
     } catch (err) {
       setLoginError(err.message);
     }
   };
 
-  const handleGitHubLogin = () => {
+  const handleGitHubLogin = async () => {
     const clientId = import.meta.env.VITE_GITHUB_CLIENT_ID;
     const redirectUri = `${window.location.origin}/login`;
     const scope = 'user:email read:user';
@@ -42,8 +43,25 @@ function LoginPage() {
       return;
     }
 
-    const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${Math.random().toString(36).substring(7)}`;
-    window.location.href = authUrl;
+    try {
+      // SECURITY: Get OAuth state from backend (stored in httpOnly cookie)
+      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+      const stateResponse = await fetch(`${apiUrl}/api/auth/oauth-state`, {
+        credentials: 'include',  // Include cookies so backend can set oauth_state cookie
+      });
+
+      if (!stateResponse.ok) {
+        throw new Error('Failed to initialize OAuth');
+      }
+
+      const { state } = await stateResponse.json();
+
+      // Redirect to GitHub with server-generated state
+      const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}`;
+      window.location.href = authUrl;
+    } catch (err) {
+      setLoginError(err.message || 'Failed to initialize login');
+    }
   };
 
   if (loading) {
