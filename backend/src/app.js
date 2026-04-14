@@ -7,6 +7,7 @@ import generateRouter from './routes/generate.js';
 import creditsRouter from './routes/credits.js';
 import authRouter from './routes/auth.js';
 import contactRouter from './routes/contact.js';
+import { getProviderPoolSummary } from './services/provider.js';
 import { limiter } from './middleware/rateLimit.js';
 
 const app = express();
@@ -110,9 +111,16 @@ app.get('/health', (req, res) => {
 
 const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
+  const providerSummary = getProviderPoolSummary();
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/health`);
   console.log(`🔒 Security: CORS restricted to ${ALLOWED_ORIGINS.length} origin(s)`);
+  console.log(
+    `🔑 Provider key pool summary: ` +
+    `groq=${providerSummary.groq.totalUnique} (legacy=${providerSummary.groq.hasLegacySingle}, list=${providerSummary.groq.listCount}, numbered=${providerSummary.groq.numberedCount}), ` +
+    `openrouter=${providerSummary.openrouter.totalUnique} (legacy=${providerSummary.openrouter.hasLegacySingle}, list=${providerSummary.openrouter.listCount}, numbered=${providerSummary.openrouter.numberedCount}), ` +
+    `nvidia=${providerSummary.nvidia.totalUnique} (legacy=${providerSummary.nvidia.hasLegacySingle}, list=${providerSummary.nvidia.listCount}, numbered=${providerSummary.nvidia.numberedCount})`
+  );
 });
 
 export default app;

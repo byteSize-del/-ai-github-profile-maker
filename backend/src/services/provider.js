@@ -25,6 +25,35 @@ function parseKeyList(rawValue) {
     .filter(Boolean);
 }
 
+function getProviderKeyDiagnostics(envPrefix) {
+  const singleKey = process.env[`${envPrefix}_API_KEY`]?.trim();
+  const listKeys = parseKeyList(process.env[`${envPrefix}_API_KEYS`]);
+
+  let numberedCount = 0;
+  for (let i = 1; i <= 10; i += 1) {
+    if (process.env[`${envPrefix}_API_KEY_${i}`]?.trim()) {
+      numberedCount += 1;
+    }
+  }
+
+  const mergedUnique = getProviderKeys(envPrefix);
+
+  return {
+    totalUnique: mergedUnique.length,
+    hasLegacySingle: !!singleKey,
+    listCount: listKeys.length,
+    numberedCount,
+  };
+}
+
+export function getProviderPoolSummary() {
+  return {
+    groq: getProviderKeyDiagnostics('GROQ'),
+    openrouter: getProviderKeyDiagnostics('OPENROUTER'),
+    nvidia: getProviderKeyDiagnostics('NVIDIA'),
+  };
+}
+
 function getProviderKeys(envPrefix) {
   const keys = [];
 
