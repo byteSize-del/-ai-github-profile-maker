@@ -3,4 +3,4 @@ Allow: /
 Disallow: /dashboard
 Disallow: /generate
 
-Sitemap: https://ai-github-profile-maker.vercel.app/sitemap.xml
+Sitemap: https://profileforge-ai.vercel.app/sitemap.xml
