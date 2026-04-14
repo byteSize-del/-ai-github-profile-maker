@@ -1,0 +1,6 @@
+User-agent: *
+Allow: /
+Disallow: /dashboard
+Disallow: /generate
+
+Sitemap: https://ai-github-profile-maker.vercel.app/sitemap.xml
