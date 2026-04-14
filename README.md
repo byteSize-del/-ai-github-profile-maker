@@ -128,6 +128,11 @@ SUPABASE_SERVICE_KEY=your_service_key
 # OPENROUTER_API_KEYS=key_a,key_b,key_c
 # NVIDIA_API_KEYS=key_a,key_b,key_c
 
+# Optional model fallbacks (free reasoning models first)
+GROQ_MODEL_CANDIDATES=openai/gpt-oss-120b,openai/gpt-oss-20b,qwen/qwen3-32b
+OPENROUTER_MODEL_CANDIDATES=google/gemma-4-31b-it:free,google/gemma-4-26b-a4b-it:free,google/gemma-3-27b-it:free
+NVIDIA_MODEL_CANDIDATES=minimaxai/minimax-m2.5,mistralai/mistral-small-4-119b-2603,moonshotai/kimi-k2-instruct
+
 # Other
 PORT=4000
 FRONTEND_URL=http://localhost:5173
