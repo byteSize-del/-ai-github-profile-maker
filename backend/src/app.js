@@ -21,9 +21,13 @@ app.use(cors({
       'http://localhost:3000',
     ];
     
-    if (!origin || allowedOrigins.includes(origin)) {
+    // Allow requests without origin (like from mobile apps or curl)
+    // Allow any origin from localhost
+    // Check against allowed origins
+    if (!origin || origin.includes('localhost') || origin.includes('127.0.0.1') || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.warn(`CORS blocked origin: ${origin}`);
       callback(new Error('Not allowed by CORS'));
     }
   },
