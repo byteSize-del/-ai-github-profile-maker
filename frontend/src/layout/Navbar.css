@@ -178,6 +178,13 @@
 }
 
 @media (max-width: 900px) {
+  .navbar {
+    background: rgba(5, 5, 5, 0.96);
+    backdrop-filter: blur(22px);
+    -webkit-backdrop-filter: blur(22px);
+    box-shadow: 0 10px 24px rgba(0, 0, 0, 0.35);
+  }
+
   .navbar-links,
   .navbar-actions {
     display: none;
