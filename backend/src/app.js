@@ -27,6 +27,20 @@ const ALLOWED_ORIGINS = [
   process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:5173' : null,
 ].filter(Boolean);
 
+// Allow Vercel preview deployments for this project namespace.
+const ALLOWED_ORIGIN_PATTERNS = [
+  /^https:\/\/ai-github-profile-frontend(?:-[a-z0-9-]+)?\.vercel\.app$/i,
+  /^https:\/\/ai-github-profile-maker(?:-[a-z0-9-]+)?\.vercel\.app$/i,
+];
+
+function isAllowedOrigin(origin) {
+  if (ALLOWED_ORIGINS.includes(origin)) {
+    return true;
+  }
+
+  return ALLOWED_ORIGIN_PATTERNS.some((pattern) => pattern.test(origin));
+}
+
 // Enhanced CORS with strict origin validation
 const corsOptions = {
   origin: function(origin, callback) {
@@ -36,12 +50,12 @@ const corsOptions = {
       return callback(null, true);
     }
 
-    // SECURITY: Only allow exact origin matches, no wildcards or pattern matching
-    if (ALLOWED_ORIGINS.includes(origin)) {
+    if (isAllowedOrigin(origin)) {
       callback(null, true);
     } else {
       console.warn(`🔒 CORS blocked unauthorized origin: ${origin}`);
-      callback(new Error('CORS policy violation'));
+      // Return no CORS permissions instead of throwing a server error.
+      callback(null, false);
     }
   },
   credentials: true,  // Allow cookies
