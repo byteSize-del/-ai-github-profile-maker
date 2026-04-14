@@ -89,18 +89,42 @@ function getErrorStatus(error) {
   return error?.status || error?.response?.status || null;
 }
 
+function resolveProviderOrder() {
+  const configuredProviders = Object.entries(providers)
+    .filter(([, { envPrefix }]) => getProviderKeys(envPrefix).length > 0)
+    .map(([name]) => name);
+
+  if (!configuredProviders.length) {
+    return [];
+  }
+
+  const requestedOrder = (process.env.AI_PROVIDER_ORDER || '')
+    .split(',')
+    .map((name) => name.trim())
+    .filter(Boolean);
+
+  if (!requestedOrder.length) {
+    return configuredProviders;
+  }
+
+  const knownRequested = requestedOrder.filter((name) => !!providers[name]);
+  const unknownRequested = requestedOrder.filter((name) => !providers[name]);
+
+  if (unknownRequested.length) {
+    console.warn(`Unknown providers in AI_PROVIDER_ORDER ignored: ${unknownRequested.join(', ')}`);
+  }
+
+  const order = [...knownRequested];
+  for (const providerName of configuredProviders) {
+    if (!order.includes(providerName)) {
+      order.push(providerName);
+    }
+  }
+
+  return order;
+}
+
 export async function generateReadme(prompt) {
-  // Check if .env is properly configured
-  if (!process.env.AI_PROVIDER_ORDER) {
-    console.error('AI_PROVIDER_ORDER not set in .env file');
-    throw new Error('No AI providers configured. Please set AI_PROVIDER_ORDER in your .env file (e.g., groq,openrouter,nvidia)');
-  }
-
-  const order = process.env.AI_PROVIDER_ORDER.split(',').map((name) => name.trim()).filter(Boolean);
-  if (!order.length) {
-    throw new Error('AI_PROVIDER_ORDER is empty. Add providers like groq,openrouter,nvidia');
-  }
-
   const totalConfiguredKeys = Object.values(providers)
     .map(({ envPrefix }) => getProviderKeys(envPrefix).length)
     .reduce((sum, count) => sum + count, 0);
@@ -108,6 +132,11 @@ export async function generateReadme(prompt) {
   if (!totalConfiguredKeys) {
     console.error('No API keys found. Please set at least one API key in .env');
     throw new Error('No API keys configured. Set GROQ_API_KEY_1..N, OPENROUTER_API_KEY_1..N, NVIDIA_API_KEY_1..N, or *_API_KEYS');
+  }
+
+  const order = resolveProviderOrder();
+  if (!order.length) {
+    throw new Error('No valid AI providers configured. Check AI_PROVIDER_ORDER and provider keys.');
   }
 
   console.log(`Trying providers in order: ${order.join(', ')}`);
