@@ -1,14 +1,14 @@
 import OpenAI from 'openai';
 
-const client = new OpenAI({
-  baseURL: 'https://integrate.api.nvidia.com/v1',
-  apiKey: process.env.NVIDIA_API_KEY,
-});
-
-export async function generateWithNvidia(prompt) {
-  if (!process.env.NVIDIA_API_KEY) {
+export async function generateWithNvidia(prompt, apiKey = process.env.NVIDIA_API_KEY) {
+  if (!apiKey) {
     throw new Error('NVIDIA_API_KEY not set');
   }
+
+  const client = new OpenAI({
+    baseURL: 'https://integrate.api.nvidia.com/v1',
+    apiKey,
+  });
   
   const res = await client.chat.completions.create({
     model: 'moonshotai/kimi-k2-instruct',

@@ -1,14 +1,14 @@
 import OpenAI from 'openai';
 
-const client = new OpenAI({
-  baseURL: 'https://openrouter.ai/api/v1',
-  apiKey: process.env.OPENROUTER_API_KEY,
-});
-
-export async function generateWithOpenRouter(prompt) {
-  if (!process.env.OPENROUTER_API_KEY) {
+export async function generateWithOpenRouter(prompt, apiKey = process.env.OPENROUTER_API_KEY) {
+  if (!apiKey) {
     throw new Error('OPENROUTER_API_KEY not set');
   }
+
+  const client = new OpenAI({
+    baseURL: 'https://openrouter.ai/api/v1',
+    apiKey,
+  });
   
   const res = await client.chat.completions.create({
     // Use a more reliable free model

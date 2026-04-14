@@ -97,13 +97,36 @@ ai-github-profile-maker/
 GITHUB_CLIENT_ID=your_github_client_id
 GITHUB_CLIENT_SECRET=your_github_client_secret
 
-# AI Providers (at least one required)
-GROQ_API_KEY=your_groq_key
-OPENROUTER_API_KEY=your_openrouter_key
+# Session
+JWT_SECRET=your_jwt_secret
+
+# Provider fallback order
+AI_PROVIDER_ORDER=groq,openrouter,nvidia
+
+# AI Providers (supports key pools)
+GROQ_API_KEY_1=your_groq_key_1
+GROQ_API_KEY_2=your_groq_key_2
+GROQ_API_KEY_3=your_groq_key_3
+GROQ_API_KEY_4=your_groq_key_4
+
+OPENROUTER_API_KEY_1=your_openrouter_key_1
+OPENROUTER_API_KEY_2=your_openrouter_key_2
+OPENROUTER_API_KEY_3=your_openrouter_key_3
+OPENROUTER_API_KEY_4=your_openrouter_key_4
+
+NVIDIA_API_KEY_1=your_nvidia_key_1
+NVIDIA_API_KEY_2=your_nvidia_key_2
+NVIDIA_API_KEY_3=your_nvidia_key_3
+NVIDIA_API_KEY_4=your_nvidia_key_4
 
 # Supabase (optional, falls back to in-memory)
 SUPABASE_URL=https://your-project.supabase.co
 SUPABASE_SERVICE_KEY=your_service_key
+
+# Optional alternate key formats
+# GROQ_API_KEYS=key_a,key_b,key_c
+# OPENROUTER_API_KEYS=key_a,key_b,key_c
+# NVIDIA_API_KEYS=key_a,key_b,key_c
 
 # Other
 PORT=4000
@@ -125,6 +148,8 @@ REACT_APP_ENV=development
 | Groq | ✅ Primary | ⚡ Fastest | Yes |
 | OpenRouter | ✅ Fallback | Normal | Yes |
 | NVIDIA NIM | ✅ Fallback | Normal | Yes |
+
+Provider keys are pooled per provider and tried with round-robin rotation plus automatic failover.
 
 ## Database
 

@@ -3,10 +3,62 @@ import { generateWithOpenRouter } from './openrouter.js';
 import { generateWithNvidia } from './nvidia.js';
 
 const providers = {
-  groq: generateWithGroq,
-  openrouter: generateWithOpenRouter,
-  nvidia: generateWithNvidia,
+  groq: { generator: generateWithGroq, envPrefix: 'GROQ' },
+  openrouter: { generator: generateWithOpenRouter, envPrefix: 'OPENROUTER' },
+  nvidia: { generator: generateWithNvidia, envPrefix: 'NVIDIA' },
 };
+
+const providerRotationIndex = {
+  groq: 0,
+  openrouter: 0,
+  nvidia: 0,
+};
+
+function parseKeyList(rawValue) {
+  if (!rawValue) {
+    return [];
+  }
+
+  return rawValue
+    .split(',')
+    .map((value) => value.trim())
+    .filter(Boolean);
+}
+
+function getProviderKeys(envPrefix) {
+  const keys = [];
+
+  const singleKey = process.env[`${envPrefix}_API_KEY`];
+  if (singleKey?.trim()) {
+    keys.push(singleKey.trim());
+  }
+
+  keys.push(...parseKeyList(process.env[`${envPrefix}_API_KEYS`]));
+
+  for (let i = 1; i <= 10; i += 1) {
+    const numberedKey = process.env[`${envPrefix}_API_KEY_${i}`];
+    if (numberedKey?.trim()) {
+      keys.push(numberedKey.trim());
+    }
+  }
+
+  return [...new Set(keys)];
+}
+
+function getRotatedKeys(providerName, keys) {
+  if (!keys.length) {
+    return [];
+  }
+
+  const startIndex = providerRotationIndex[providerName] % keys.length;
+  providerRotationIndex[providerName] = (startIndex + 1) % keys.length;
+
+  return keys.map((_, offset) => keys[(startIndex + offset) % keys.length]);
+}
+
+function getErrorStatus(error) {
+  return error?.status || error?.response?.status || null;
+}
 
 export async function generateReadme(prompt) {
   // Check if .env is properly configured
@@ -15,49 +67,56 @@ export async function generateReadme(prompt) {
     throw new Error('No AI providers configured. Please set AI_PROVIDER_ORDER in your .env file (e.g., groq,openrouter,nvidia)');
   }
 
-  // Check if at least one API key exists
-  const hasKeys = process.env.GROQ_API_KEY || process.env.OPENROUTER_API_KEY || process.env.NVIDIA_API_KEY;
-  if (!hasKeys) {
-    console.error('No API keys found. Please set at least one API key in .env');
-    throw new Error('No API keys configured. Please set GROQ_API_KEY, OPENROUTER_API_KEY, or NVIDIA_API_KEY in your .env file');
+  const order = process.env.AI_PROVIDER_ORDER.split(',').map((name) => name.trim()).filter(Boolean);
+  if (!order.length) {
+    throw new Error('AI_PROVIDER_ORDER is empty. Add providers like groq,openrouter,nvidia');
   }
 
-  const order = process.env.AI_PROVIDER_ORDER.split(',');
+  const totalConfiguredKeys = Object.values(providers)
+    .map(({ envPrefix }) => getProviderKeys(envPrefix).length)
+    .reduce((sum, count) => sum + count, 0);
+
+  if (!totalConfiguredKeys) {
+    console.error('No API keys found. Please set at least one API key in .env');
+    throw new Error('No API keys configured. Set GROQ_API_KEY_1..N, OPENROUTER_API_KEY_1..N, NVIDIA_API_KEY_1..N, or *_API_KEYS');
+  }
+
   console.log(`Trying providers in order: ${order.join(', ')}`);
   
-  let allErrors = [];
+  const allErrors = [];
   
   for (const name of order) {
-    const trimmedName = name.trim();
-    if (!providers[trimmedName]) {
-      console.warn(`Unknown provider: ${trimmedName}`);
+    const providerConfig = providers[name];
+    if (!providerConfig) {
+      console.warn(`Unknown provider: ${name}`);
       continue;
     }
-    
-    // Check if this provider has an API key
-    const hasKeyForProvider = 
-      (trimmedName === 'groq' && process.env.GROQ_API_KEY) ||
-      (trimmedName === 'openrouter' && process.env.OPENROUTER_API_KEY) ||
-      (trimmedName === 'nvidia' && process.env.NVIDIA_API_KEY);
-    
-    if (!hasKeyForProvider) {
-      console.warn(`Skipping ${trimmedName}: no API key configured`);
+
+    const providerKeys = getProviderKeys(providerConfig.envPrefix);
+    if (!providerKeys.length) {
+      console.warn(`Skipping ${name}: no API key configured`);
       continue;
     }
+
+    const rotatedKeys = getRotatedKeys(name, providerKeys);
+    console.log(`Attempting ${name} with ${rotatedKeys.length} configured key(s)`);
     
-    try {
-      console.log(`Attempting ${trimmedName}...`);
-      const result = await providers[trimmedName](prompt);
-      console.log(`${trimmedName} succeeded!`);
-      return { result, provider: trimmedName };
-    } catch (err) {
-      console.error(`Provider ${trimmedName} failed:`, err.message);
-      allErrors.push({ provider: trimmedName, error: err.message });
-      
-      // If rate limited, add a small delay before trying next provider
-      if (err.status === 429) {
-        console.log(`${trimmedName} rate limited, trying next provider...`);
-        await new Promise(resolve => setTimeout(resolve, 1000));
+    for (let keyIndex = 0; keyIndex < rotatedKeys.length; keyIndex += 1) {
+      const key = rotatedKeys[keyIndex];
+
+      try {
+        const result = await providerConfig.generator(prompt, key);
+        console.log(`${name} succeeded with key slot ${keyIndex + 1}/${rotatedKeys.length}`);
+        return { result, provider: name };
+      } catch (err) {
+        const status = getErrorStatus(err);
+        console.error(`Provider ${name} failed on key slot ${keyIndex + 1}/${rotatedKeys.length}:`, err.message);
+        allErrors.push({ provider: name, keySlot: keyIndex + 1, status, error: err.message });
+
+        // Rate limit or transient upstream failure: try the next key/provider quickly.
+        if (status === 429 || status === 503) {
+          await new Promise((resolve) => setTimeout(resolve, 250));
+        }
       }
     }
   }

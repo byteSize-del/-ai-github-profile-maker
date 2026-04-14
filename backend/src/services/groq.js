@@ -1,11 +1,11 @@
 import Groq from 'groq-sdk';
 
-const groq = new Groq({ apiKey: process.env.GROQ_API_KEY });
-
-export async function generateWithGroq(prompt) {
-  if (!process.env.GROQ_API_KEY) {
+export async function generateWithGroq(prompt, apiKey = process.env.GROQ_API_KEY) {
+  if (!apiKey) {
     throw new Error('GROQ_API_KEY not set');
   }
+
+  const groq = new Groq({ apiKey });
   
   const res = await groq.chat.completions.create({
     model: 'openai/gpt-oss-120b',
