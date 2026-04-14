@@ -226,6 +226,36 @@ export async function saveGeneration(userId, generationData) {
 }
 
 /**
+ * Save a contact form submission
+ */
+export async function saveContactMessage(contactData) {
+  if (!supabaseAdmin) {
+    throw new Error('Supabase not configured');
+  }
+
+  const payload = {
+    user_id: contactData.user_id || null,
+    name: contactData.name,
+    email: contactData.email,
+    subject: contactData.subject,
+    message: contactData.message,
+    status: contactData.status || 'new',
+  };
+
+  const { data: contactMessage, error } = await supabaseAdmin
+    .from('contact_messages')
+    .insert([payload])
+    .select('id, created_at')
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return contactMessage;
+}
+
+/**
  * Get generation history for a user
  */
 export async function getGenerationHistory(userId, limit = 10, offset = 0) {

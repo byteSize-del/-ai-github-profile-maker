@@ -6,6 +6,7 @@ import cookieParser from 'cookie-parser';
 import generateRouter from './routes/generate.js';
 import creditsRouter from './routes/credits.js';
 import authRouter from './routes/auth.js';
+import contactRouter from './routes/contact.js';
 import { limiter } from './middleware/rateLimit.js';
 
 const app = express();
@@ -86,6 +87,7 @@ app.use(limiter);
 app.use('/api/auth', authRouter);
 app.use('/api/generate', generateRouter);
 app.use('/api/credits', creditsRouter);
+app.use('/api/contact', contactRouter);
 
 // Health check
 app.get('/health', (req, res) => {

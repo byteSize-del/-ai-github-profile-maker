@@ -41,6 +41,34 @@ export function extractSessionUser(req, res, next) {
 }
 
 /**
+ * Best-effort session extraction for public endpoints.
+ * If a valid session exists, req.user/req.userId are populated.
+ * If not, request continues as anonymous.
+ */
+export function extractSessionUserIfPresent(req, res, next) {
+  try {
+    const jwtSecret = process.env.JWT_SECRET;
+    const sessionCookie = req.cookies?.session;
+
+    if (!jwtSecret || !sessionCookie) {
+      return next();
+    }
+
+    const sessionData = jwt.verify(sessionCookie, jwtSecret, {
+      algorithms: ['HS256'],
+      maxAge: '24h'
+    });
+
+    req.user = sessionData;
+    req.userId = sessionData.id;
+    return next();
+  } catch {
+    // Ignore invalid/expired optional session and continue as anonymous.
+    return next();
+  }
+}
+
+/**
  * Create a signed JWT session token
  * SECURITY: Cryptographically signed token prevents tampering
  */

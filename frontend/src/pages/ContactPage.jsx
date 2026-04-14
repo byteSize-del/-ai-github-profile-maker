@@ -1,4 +1,59 @@
+import { useState } from 'react';
+
+const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+
 function ContactPage() {
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    subject: '',
+    message: '',
+  });
+  const [submitting, setSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState('');
+  const [submitSuccess, setSubmitSuccess] = useState('');
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+    setSubmitError('');
+    setSubmitSuccess('');
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setSubmitting(true);
+    setSubmitError('');
+    setSubmitSuccess('');
+
+    try {
+      const response = await fetch(`${API_URL}/api/contact`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify(formData),
+      });
+
+      const data = await response.json().catch(() => ({}));
+
+      if (!response.ok) {
+        throw new Error(data.error || 'Failed to send message');
+      }
+
+      setSubmitSuccess('Message sent. Our team will respond within one business day.');
+      setFormData({
+        name: '',
+        email: '',
+        subject: '',
+        message: '',
+      });
+    } catch (err) {
+      setSubmitError(err.message || 'Failed to send message');
+    } finally {
+      setSubmitting(false);
+    }
+  };
+
   return (
     <div className="page-shell">
       <section className="page-hero">
@@ -27,31 +82,56 @@ function ContactPage() {
 
       <section className="page-section contact-form-card">
         <h3>Message form</h3>
-        <p className="plan-note">This form is currently a client-side placeholder for the support API.</p>
-        <form className="form-grid" onSubmit={(e) => e.preventDefault()}>
+        <p className="plan-note">Send your support request and it will be saved to our support queue.</p>
+        <form className="form-grid" onSubmit={handleSubmit}>
           <label>
             Name
-            <input type="text" placeholder="Your full name" required />
+            <input
+              type="text"
+              name="name"
+              placeholder="Your full name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+            />
           </label>
           <label>
             Email
-            <input type="email" placeholder="you@example.com" required />
+            <input
+              type="email"
+              name="email"
+              placeholder="you@example.com"
+              value={formData.email}
+              onChange={handleChange}
+              required
+            />
           </label>
           <label>
             Subject
-            <select required>
+            <select name="subject" value={formData.subject} onChange={handleChange} required>
               <option value="">Select reason</option>
-              <option value="auth">Authentication support</option>
-              <option value="generation">Generation quality</option>
-              <option value="billing">Billing and credits</option>
-              <option value="other">Other</option>
+              <option value="Authentication support">Authentication support</option>
+              <option value="Generation quality">Generation quality</option>
+              <option value="Billing and credits">Billing and credits</option>
+              <option value="Other">Other</option>
             </select>
           </label>
           <label>
             Message
-            <textarea rows="6" placeholder="Describe your request in detail" required />
+            <textarea
+              rows="6"
+              name="message"
+              placeholder="Describe your request in detail"
+              value={formData.message}
+              onChange={handleChange}
+              required
+            />
           </label>
-          <button className="button-primary" type="submit">Send Message</button>
+          {submitSuccess && <p className="form-status form-status-success">{submitSuccess}</p>}
+          {submitError && <p className="form-status form-status-error">{submitError}</p>}
+          <button className="button-primary" type="submit" disabled={submitting}>
+            {submitting ? 'Sending...' : 'Send Message'}
+          </button>
         </form>
       </section>
     </div>
