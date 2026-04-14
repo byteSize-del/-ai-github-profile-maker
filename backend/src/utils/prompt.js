@@ -5,29 +5,85 @@ import { dirname, join } from 'path';
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = dirname(__filename);
 
-// Generate unique typing SVG lines based on profile style
-function getTypingLines(style, name, role) {
+// Generate compelling typing SVG lines based on user's tech stack and role - NO CLICHÉS
+function getTypingLines(style, name, role, techStack = []) {
+  // Extract specializations from tech stack
+  const hasReact = techStack.some(t => t.toLowerCase().includes('react'));
+  const hasNode = techStack.some(t => t.toLowerCase().includes('node'));
+  const hasAI = techStack.some(t => ['tensorflow', 'pytorch', 'ml', 'llm', 'ai', 'groq', 'langchain'].some(term => t.toLowerCase().includes(term)));
+  const hasDevOps = techStack.some(t => ['docker', 'kubernetes', 'aws', 'gcp', 'devops'].some(term => t.toLowerCase().includes(term)));
+  const hasPython = techStack.some(t => t.toLowerCase().includes('python'));
+  
+  // Parse role for keywords
+  const roleType = role.toLowerCase();
+  const isFullstack = roleType.includes('fullstack') || roleType.includes('full-stack');
+  const isFrontend = roleType.includes('frontend') || roleType.includes('front-end') || roleType.includes('ui');
+  const isBackend = roleType.includes('backend') || roleType.includes('back-end');
+  const isDevOpsRole = roleType.includes('devops') || roleType.includes('infrastructure') || roleType.includes('sre');
+  const isDataRole = roleType.includes('data') || roleType.includes('ml') || roleType.includes('ai');
+
   const lineSets = {
     professional: [
-      `${name}`,
-      `${role}`,
-      `Building scalable solutions`,
-      `Clean code enthusiast`,
+      // Tech-specific focus lines
+      ...(hasReact && hasNode ? [`React + Node specialist`] : []),
+      ...(hasAI ? [`Shipping AI features`] : []),
+      ...(hasDevOps ? [`Building for scale`] : []),
+      ...(hasPython && hasAI ? [`ML | Python | Production`] : []),
+      
+      // Achievement-focused lines (no clichés)
+      `Turning ideas into products`,
+      `Shipped to millions of users`,
+      `Performance obsessive`,
+      `Full-stack problem solver`,
+      `Metrics + Code = Success`,
+      
+      // Tech stack lines (specific, not generic)
+      ...techStack.slice(0, 3).map(tech => `${tech} expert`),
+      
+      // Role-appropriate lines
+      ...(isFullstack ? [`End-to-end ownership`] : []),
+      ...(isFrontend ? [`UI that users love`] : []),
+      ...(isBackend ? [`Scaling databases & APIs`] : []),
+      ...(isDevOpsRole ? [`Reliable systems`] : []),
+      ...(isDataRole ? [`Data-driven decisions`] : []),
+      
+      // Fallback professional lines
+      `Architecting solutions`,
+      `Testing at scale`,
+      `Open source contributor`,
     ],
     casual: [
-      `Hey there! I'm ${name.split(' ')[0]} 👋`,
-      `${role}`,
-      `I break things & fix them`,
-      `Powered by coffee ☕`,
+      `${name.split(' ')[0]}'s code`,
+      `${role} IRL`,
+      `Breaking & fixing constantly`,
+      `JavaScript is my canvas`,
+      `Ship it 🚀`,
+      `Refactoring nonstop`,
+      `Debugging like a detective`,
+      `Coffee-driven development`,
+      ...techStack.slice(0, 2).map(tech => `${tech} wizard`),
     ],
     minimal: [
       `${name}`,
       `${role}`,
-      `code · build · ship`,
+      `code → build → ship`,
+      `${techStack.slice(0, 1)[0]} • TypeScript • Scale`,
+      `Solving problems`,
     ],
   };
 
-  const lines = lineSets[style] || lineSets.professional;
+  let lines = lineSets[style] || lineSets.professional;
+  
+  // Filter out empty strings and duplicates
+  lines = [...new Set(lines.filter(line => line && line.trim()))];
+  
+  // Ensure we have at least 3-4 lines
+  if (lines.length < 3) {
+    lines.push(`${name}`, role, ...lineSets.professional.slice(0, 2));
+  }
+  
+  // Take first 4 unique lines for diversity
+  lines = lines.slice(0, Math.min(4, lines.length));
   
   // Randomize order for uniqueness each time
   const shuffled = [...lines].sort(() => Math.random() - 0.5);
@@ -54,8 +110,8 @@ export function buildPrompt(userData) {
     .map(([k, v]) => `- ${k}: ${v}`)
     .join('\n');
 
-  // Generate unique typing SVG lines each time based on profile style
-  const typingLines = getTypingLines(profileStyle, name, userData.role);
+  // Generate unique typing SVG lines each time based on profile style and user's actual tech stack
+  const typingLines = getTypingLines(profileStyle, name, userData.role, userData.techStack || []);
   
   // Only include typing SVG for non-job-ready profiles
   let typingSvgUrl = 'NO_TYPING_SVG';

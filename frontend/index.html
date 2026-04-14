@@ -1,10 +1,102 @@
 <!doctype html>
-<html lang="en">
+<html class="dark" lang="en">
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🚀</text></svg>" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>AI GitHub Profile Maker</title>
+      <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;family=Space+Grotesk:wght@300;400;500;600;700&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+    <style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        .neon-glow {
+            box-shadow: 0 0 20px rgba(204, 151, 255, 0.15);
+        }
+        .cta-gradient {
+            background: linear-gradient(135deg, #cc97ff 0%, #9c48ea 100%);
+        }
+        .glass-panel {
+            background: rgba(31, 43, 73, 0.6);
+            backdrop-filter: blur(12px);
+        }
+    </style>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-surface": "#faf8ff",
+                    "outline": "#6d758c",
+                    "on-secondary-fixed": "#003271",
+                    "surface-dim": "#060e20",
+                    "outline-variant": "#40485d",
+                    "on-tertiary": "#680921",
+                    "inverse-on-surface": "#4d556b",
+                    "surface-variant": "#192540",
+                    "on-tertiary-fixed-variant": "#711227",
+                    "tertiary-fixed-dim": "#fa7c8b",
+                    "on-background": "#dee5ff",
+                    "on-tertiary-fixed": "#39000d",
+                    "on-surface-variant": "#a3aac4",
+                    "surface-container": "#0f1930",
+                    "error-dim": "#d73357",
+                    "on-primary-fixed": "#000000",
+                    "on-secondary-fixed-variant": "#004da8",
+                    "surface": "#060e20",
+                    "secondary": "#699cff",
+                    "tertiary-fixed": "#ff909c",
+                    "secondary-fixed": "#bfd1ff",
+                    "surface-container-lowest": "#000000",
+                    "on-error-container": "#ffb2b9",
+                    "secondary-fixed-dim": "#a9c4ff",
+                    "surface-container-highest": "#192540",
+                    "surface-bright": "#1f2b49",
+                    "on-tertiary-container": "#570018",
+                    "on-secondary-container": "#f7f7ff",
+                    "tertiary": "#ff95a0",
+                    "surface-container-high": "#141f38",
+                    "primary-dim": "#9c48ea",
+                    "primary": "#cc97ff",
+                    "surface-container-low": "#091328",
+                    "error-container": "#a70138",
+                    "on-secondary": "#001e4a",
+                    "tertiary-container": "#fe7e8e",
+                    "on-primary-container": "#360061",
+                    "error": "#ff6e84",
+                    "background": "#060e20",
+                    "on-primary-fixed-variant": "#430076",
+                    "inverse-primary": "#842cd3",
+                    "primary-fixed": "#c284ff",
+                    "secondary-dim": "#699cff",
+                    "surface-tint": "#cc97ff",
+                    "tertiary-dim": "#f47786",
+                    "primary-container": "#c284ff",
+                    "on-surface": "#dee5ff",
+                    "on-primary": "#47007c",
+                    "primary-fixed-dim": "#b971ff",
+                    "on-error": "#490013",
+                    "secondary-container": "#005ac2"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "fontFamily": {
+                    "headline": ["Space Grotesk"],
+                    "body": ["Inter"],
+                    "label": ["Inter"]
+            }
+          },
+        },
+      }
+    </script>
   </head>
   <body>
     <div id="root"></div>
