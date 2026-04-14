@@ -95,16 +95,31 @@ Generate the README with these sections in exact order:
 - Visitor badge (centered)
 - Horizontal rule
 
-### 2. 🙋‍♂️ About Me
-- **Format**: 6-8 bullet points in first person
-- **Bullets**: Use expressive emojis (🎓 🌐 🔭 🌱 💬 ⚡ 🎯 🌟)
-- **Content to include**:
-  - Current status (student/aspiring dev/professional)
-  - What you love building
-  - Current focus/learning
-  - Areas of expertise
-  - What people can ask you about
-  - A relatable fun fact
+### 2. About Me
+- **Format**: Mix of short paragraph + emoji bullets (6-8 items)
+- **Tone**: Friendly, relatable, authentic personality
+- **Content structure**:
+  - **Opening (1-2 sentences)**: Who you are + what excites you about code
+    - ✅ GOOD: "I'm ${name}, a ${userData.role} who loves turning ideas into interactive experiences. When I'm not debugging at 2am, you'll find me exploring new frameworks or contributing to open source."
+    - ❌ AVOID: "Hi, I'm a developer who likes coding."
+  
+  - **Bullet points with emojis** (use these as inspiration, customize for user):
+    - 🎓 **Background**: Student/aspiring dev/professional transitioning into tech
+    - 🔭 **Current focus**: What you're building or learning right now
+    - 🌱 **Growing skills**: Technologies you're actively improving
+    - 💬 **Ask me about**: Topics you're knowledgeable/excited about
+    - ⚡ **Fun fact**: Relatable dev quirk (coffee addiction, dark mode forever, tabs vs spaces)
+    - 🎯 **Goals**: What you're working toward (first job, open source, specific project)
+    - 🌟 **Interests**: Beyond code—gaming, music, fitness, art, etc.
+
+**EXAMPLE**:
+- 🎓 Computer Science student graduating in 2025
+- 🔭 Building a real-time chat app with WebSockets and learning system design
+- 🌱 Deepening my TypeScript skills—migrating all my JS projects
+- 💬 Ask me about React hooks, CSS animations, or why `undefined` exists
+- ⚡ Fun fact: I've had the same terminal wallpaper for 3 years and refuse to change it
+- 🎯 Goal: Land my first full-stack role and contribute to open-source projects I actually use
+- 🌟 Outside code: Rock climbing, indie game dev, and collecting mechanical keyboards
 
 ### 3. 🛠️ Tech Stack
 - **Format**: All badges in `<p align="left">` wrapper
@@ -129,16 +144,22 @@ Generate the README with these sections in exact order:
 - **Theme**: tokyonight with `hide_border=true`
 - Add horizontal rule after
 
-### 6. 🎉 Fun Facts
-- **Format**: 4 quirky, relatable developer facts
-- **Bullets**: Use fun emojis (🎮 ☕ 🌙 🤖 🍕 🎧 🐛)
-- **Examples**:
-  - Debugging habits
-  - Coffee/tea addiction
-  - Late-night coding preferences
-  - Funny bug stories
-  - Setup preferences (dark mode, tabs vs spaces)
-  - Learning quirks
+### 6. Fun Facts & Dev Quirks
+- **Format**: 4-5 bullet points with fun emojis
+- **Philosophy**: Show personality while staying relatable to developers
+- **Common themes** (pick 4-5, customize for user):
+  - ☕ **Caffeine dependency**: "Runs on coffee and stack overflow answers"
+  - 🌙 **Coding hours**: "Does their best debugging after midnight"
+  - 🎮 **Gaming breaks**: "Takes breaks by playing games, then gets inspired to build them"
+  - 🤖 **Automation obsession**: "Would rather spend 3 hours automating a 5-minute task"
+  - 🍕 **Snack preferences**: "Powered by pizza and curiosity"
+  - 🎧 **Coding soundtrack**: "Codes best with lo-fi hip hop or complete silence"
+  - 🐛 **Debugging stories**: "Once spent 6 hours fixing a bug that was a missing semicolon"
+  - 🎨 **Setup quirks**: "Dark mode everything, even my browser at 3am"
+  - ⌨️ **Editor wars**: "Uses VS Code but respects Vim users (from a distance)"
+  - 📚 **Tutorial habits**: "Has 47 tabs open and 3 tutorial series halfway done"
+
+**CUSTOMIZATION**: Pick facts that match the user's actual personality from their bio/socials
 - Add horizontal rule after
 
 ### 7. 📬 Contact & Socials
@@ -189,16 +210,19 @@ Coffee addiction • Late-night coding • "It works on my machine" • Stack Ov
 
 ## Pre-Output Verification Checklist
 
-1. ✅ Header: `<h1 align="center">Hey there, I'm ${name} 👋</h1>`
+1. ✅ Header: `<h1 align="center">Hey there, I'm ${name} 👋</h1>` or similar friendly greeting
 2. ✅ Typing SVG centered with empty line after
 3. ✅ Visitor badge centered with empty line after
-4. ✅ All tech badges use `${techBadgeUrls}`
-5. ✅ All stats URLs contain `username=${gh}` or `user=${gh}`
-6. ✅ Seven `---` dividers (between sections)
-7. ✅ Fun Facts section: 4 emoji-bullet facts
-8. ✅ Contact section: social badges with real links
-9. ✅ Closing quote: centered with sparkle emojis
-10. ✅ Total length 70-120 lines
+4. ✅ About Me: Mix of paragraph + 6-8 emoji bullets with personalized content
+5. ✅ All tech badges use `${techBadgeUrls}` in `<p align="left">` wrapper
+6. ✅ Projects/Work section: 3-4 bullets with inspirational quote
+7. ✅ All stats URLs contain `username=${gh}` or `user=${gh}` (3 stats cards total)
+8. ✅ Fun Facts: 4-5 relatable, personalized dev quirks with fun emojis
+9. ✅ Contact section: Social badges with real links from user data
+10. ✅ Closing quote: Centered with sparkle emojis
+11. ✅ Seven `---` dividers (between sections)
+12. ✅ Total length 80-130 lines
+13. ✅ No placeholder text, all content personalized to user
 
 ---
 

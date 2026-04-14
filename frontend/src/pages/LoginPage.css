@@ -1,24 +1,51 @@
+/* ============================================
+   LOGIN PAGE - Professional Design
+   ============================================ */
+
 .login-page {
   min-height: 100vh;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  padding: 20px;
+  background: var(--gradient-surface);
+  padding: var(--space-lg);
+  position: relative;
+  overflow: hidden;
+}
+
+/* Background Effects */
+.login-page::before {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: -50%;
+  width: 200%;
+  height: 200%;
+  background: radial-gradient(circle at 30% 30%, rgba(139, 92, 246, 0.15) 0%, transparent 50%),
+              radial-gradient(circle at 70% 70%, rgba(99, 102, 241, 0.1) 0%, transparent 50%);
+  animation: bgFloat 20s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@keyframes bgFloat {
+  0%, 100% { transform: translate(0, 0); }
+  50% { transform: translate(-5%, -5%); }
 }
 
 .login-container {
   width: 100%;
-  max-width: 500px;
+  max-width: 480px;
   position: relative;
+  z-index: 1;
 }
 
 .login-card {
-  background: white;
-  border-radius: 16px;
-  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-2xl);
   overflow: hidden;
   animation: slideUp 0.5s ease-out;
+  box-shadow: var(--shadow-xl);
 }
 
 @keyframes slideUp {
@@ -32,61 +59,71 @@
   }
 }
 
+/* Header */
 .login-header {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  padding: 40px 30px;
+  background: var(--gradient-accent);
+  padding: var(--space-2xl);
   text-align: center;
 }
 
 .login-header h1 {
-  margin: 0 0 10px 0;
-  font-size: 24px;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
   font-weight: 700;
+  color: white;
+  margin-bottom: var(--space-xs);
 }
 
 .login-header p {
+  font-size: 0.9375rem;
+  color: rgba(255, 255, 255, 0.85);
   margin: 0;
-  font-size: 14px;
-  opacity: 0.9;
 }
 
+/* Content */
 .login-content {
-  padding: 40px 30px;
+  padding: var(--space-2xl);
 }
 
 .error-message {
-  background-color: #fee;
-  border: 1px solid #fcc;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 25px;
+  background: rgba(239, 68, 68, 0.1);
+  border: 1px solid rgba(239, 68, 68, 0.3);
+  border-radius: var(--radius-lg);
+  padding: var(--space-md);
+  margin-bottom: var(--space-lg);
   display: flex;
-  gap: 12px;
-  color: #c33;
-  font-size: 14px;
+  gap: var(--space-md);
+  color: var(--color-error);
+  font-size: 0.9375rem;
 }
 
 .error-icon {
   flex-shrink: 0;
-  font-size: 18px;
+  font-size: 1.25rem;
 }
 
 .error-message strong {
   display: block;
-  color: #933;
-  margin-bottom: 4px;
+  color: var(--color-error);
+  margin-bottom: var(--space-xs);
 }
 
+.error-message p {
+  margin: 0;
+  color: var(--color-text-secondary);
+}
+
+/* Features Preview */
 .features-preview {
-  margin-bottom: 30px;
+  margin-bottom: var(--space-xl);
 }
 
 .features-preview h3 {
-  font-size: 16px;
+  font-family: var(--font-display);
+  font-size: 1rem;
   font-weight: 600;
-  margin: 0 0 15px 0;
-  color: #333;
+  margin: 0 0 var(--space-md) 0;
+  color: var(--color-text-primary);
 }
 
 .features-preview ul {
@@ -96,37 +133,48 @@
 }
 
 .features-preview li {
-  padding: 10px 0;
-  color: #666;
-  font-size: 14px;
-  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-sm) 0;
+  color: var(--color-text-secondary);
+  font-size: 0.9375rem;
+  border-bottom: 1px solid var(--color-border-subtle);
 }
 
 .features-preview li:last-child {
   border-bottom: none;
 }
 
+.features-preview li svg {
+  width: 18px;
+  height: 18px;
+  color: var(--color-accent-primary);
+  flex-shrink: 0;
+}
+
+/* GitHub Button */
 .github-login-btn {
   width: 100%;
-  padding: 14px 20px;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
+  padding: var(--space-md) var(--space-xl);
+  background: var(--color-text-primary);
+  color: var(--color-bg-primary);
   border: none;
-  border-radius: 8px;
-  font-size: 16px;
+  border-radius: var(--radius-lg);
+  font-size: 1rem;
   font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.4);
+  gap: var(--space-md);
+  transition: all var(--transition-base);
 }
 
 .github-login-btn:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(102, 126, 234, 0.6);
+  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3);
+  background: var(--color-text-primary);
 }
 
 .github-login-btn:active:not(:disabled) {
@@ -139,52 +187,52 @@
 }
 
 .github-icon {
-  width: 20px;
-  height: 20px;
+  width: 22px;
+  height: 22px;
 }
 
+/* Footer */
 .login-footer {
-  background-color: #f8f9fa;
-  padding: 20px 30px;
-  border-top: 1px solid #eee;
+  background: var(--color-bg-tertiary);
+  padding: var(--space-lg);
+  border-top: 1px solid var(--color-border-subtle);
   text-align: center;
 }
 
 .privacy-note {
-  font-size: 12px;
-  color: #888;
+  font-size: 0.8125rem;
+  color: var(--color-text-muted);
   margin: 0;
   line-height: 1.6;
 }
 
 .privacy-note a {
-  color: #667eea;
+  color: var(--color-accent-secondary);
   text-decoration: none;
+  transition: color var(--transition-fast);
 }
 
 .privacy-note a:hover {
-  text-decoration: underline;
+  color: var(--color-accent-primary);
 }
 
-.login-bg-decoration {
-  position: absolute;
-  top: -100px;
-  right: -100px;
-  width: 300px;
-  height: 300px;
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 50%;
-  pointer-events: none;
+/* Loading State */
+.login-loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-3xl);
 }
 
 .spinner {
-  width: 50px;
-  height: 50px;
-  border: 4px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  width: 48px;
+  height: 48px;
+  border: 3px solid var(--color-bg-tertiary);
+  border-top-color: var(--color-accent-primary);
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
-  margin: 0 auto 20px;
+  margin-bottom: var(--space-md);
 }
 
 @keyframes spin {
@@ -193,20 +241,27 @@
   }
 }
 
+.login-loading p {
+  color: var(--color-text-secondary);
+  font-size: 0.9375rem;
+  margin: 0;
+}
+
+/* Responsive */
 @media (max-width: 480px) {
   .login-header {
-    padding: 30px 20px;
+    padding: var(--space-xl);
   }
 
   .login-header h1 {
-    font-size: 20px;
+    font-size: 1.25rem;
   }
 
   .login-content {
-    padding: 30px 20px;
+    padding: var(--space-xl);
   }
 
   .login-footer {
-    padding: 15px 20px;
+    padding: var(--space-md);
   }
 }

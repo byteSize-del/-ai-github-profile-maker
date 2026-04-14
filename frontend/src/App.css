@@ -1,85 +1,89 @@
+/* ============================================
+   APP LAYOUT - Professional Design System
+   ============================================ */
+
 .app-layout {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  background: var(--color-bg-primary);
 }
 
 .main-content {
   flex: 1;
+  padding-top: 72px;
 }
+
+/* ============================================
+   GENERATE PAGE - Professional Design
+   ============================================ */
 
 .generate-page {
-  min-height: calc(100vh - 200px);
+  min-height: calc(100vh - 72px);
   position: relative;
   overflow-x: hidden;
+  padding: var(--space-2xl) var(--space-lg);
+  background: var(--color-bg-primary);
 }
 
-.app {
-  min-height: 100vh;
-  position: relative;
-  overflow-x: hidden;
-}
-
-/* Animated Background */
+/* Subtle Background */
 .bg-gradient {
   position: fixed;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(135deg, #0f0c29 0%, #302b63 50%, #24243e 100%);
+  background: var(--color-bg-primary);
   z-index: -2;
 }
 
 .bg-shape {
   position: absolute;
   border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.4;
+  filter: blur(100px);
+  opacity: 0.15;
   animation: float 20s ease-in-out infinite;
+  pointer-events: none;
 }
 
 .bg-shape-1 {
-  width: 400px;
-  height: 400px;
-  background: linear-gradient(45deg, #667eea, #764ba2);
-  top: -100px;
-  left: -100px;
+  width: 500px;
+  height: 500px;
+  background: radial-gradient(circle, rgba(88, 166, 255, 0.3), transparent);
+  top: -150px;
+  right: -150px;
   animation-delay: 0s;
 }
 
 .bg-shape-2 {
-  width: 300px;
-  height: 300px;
-  background: linear-gradient(45deg, #f093fb, #f5576c);
-  bottom: -50px;
-  right: -50px;
-  animation-delay: -5s;
+  width: 400px;
+  height: 400px;
+  background: radial-gradient(circle, rgba(31, 111, 235, 0.25), transparent);
+  bottom: -100px;
+  left: -100px;
+  animation-delay: -7s;
 }
 
 .bg-shape-3 {
-  width: 350px;
-  height: 350px;
-  background: linear-gradient(45deg, #4facfe, #00f2fe);
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  animation-delay: -10s;
+  width: 300px;
+  height: 300px;
+  background: radial-gradient(circle, rgba(121, 192, 255, 0.2), transparent);
+  top: 40%;
+  left: 30%;
+  animation-delay: -14s;
 }
 
 @keyframes float {
   0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(50px, -50px) scale(1.1); }
-  50% { transform: translate(-30px, 30px) scale(0.9); }
-  75% { transform: translate(40px, 40px) scale(1.05); }
+  25% { transform: translate(20px, -30px) scale(1.05); }
+  50% { transform: translate(-15px, 15px) scale(0.95); }
+  75% { transform: translate(30px, 20px) scale(1.02); }
 }
 
 /* Content */
 .app-content {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 2rem 1.5rem;
   position: relative;
   z-index: 1;
 }
@@ -87,47 +91,55 @@
 /* Header */
 .app-header {
   text-align: center;
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-2xl);
 }
 
 .header-badge {
-  display: inline-block;
-  background: rgba(255, 255, 255, 0.1);
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  padding: 0.4rem 1rem;
-  border-radius: 20px;
-  font-size: 0.85rem;
-  color: #a5b4fc;
-  margin-bottom: 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border);
+  padding: 0.5rem 1rem;
+  border-radius: var(--radius-full);
+  font-size: 0.8125rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-md);
+}
+
+.header-badge svg {
+  width: 16px;
+  height: 16px;
+  color: var(--color-accent-primary);
 }
 
 .app-header h1 {
-  font-size: clamp(2rem, 5vw, 3.5rem);
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-  margin-bottom: 0.5rem;
-  font-weight: 800;
+  font-size: clamp(2rem, 5vw, 3rem);
+  font-weight: 700;
+  color: var(--color-text-primary);
+  margin-bottom: var(--space-sm);
+  letter-spacing: -0.02em;
 }
 
 .header-sub {
-  color: rgba(255, 255, 255, 0.7);
+  color: var(--color-text-secondary);
   font-size: clamp(0.9rem, 2vw, 1.1rem);
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 /* Main Layout */
 .app-main {
   display: grid;
   grid-template-columns: 1fr;
-  gap: 2rem;
+  gap: var(--space-2xl);
 }
 
 @media (min-width: 1024px) {
   .app-main {
-    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
-    gap: 2rem;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-xl);
   }
 }
 
@@ -151,57 +163,60 @@
 .error-banner {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
-  background: linear-gradient(135deg, rgba(239, 68, 68, 0.2), rgba(220, 38, 38, 0.2));
-  backdrop-filter: blur(10px);
-  border: 1px solid rgba(239, 68, 68, 0.4);
-  padding: 1rem 1.25rem;
-  border-radius: 12px;
-  margin-bottom: 1.5rem;
+  gap: var(--space-md);
+  background: rgba(248, 81, 73, 0.1);
+  border: 1px solid rgba(248, 81, 73, 0.3);
+  padding: var(--space-md) var(--space-lg);
+  border-radius: var(--radius-lg);
+  margin-bottom: var(--space-lg);
   animation: slideUp 0.3s ease-out;
 }
 
 .error-icon {
-  font-size: 1.2rem;
+  font-size: 1.25rem;
+  flex-shrink: 0;
+  color: var(--color-error);
 }
 
 .error-text {
   flex: 1;
-  color: #fca5a5;
+  color: var(--color-error);
+  font-size: 0.9375rem;
 }
 
 .error-close {
-  background: none;
+  background: transparent;
   border: none;
-  color: rgba(255, 255, 255, 0.6);
+  color: var(--color-text-tertiary);
   font-size: 1.5rem;
   cursor: pointer;
-  padding: 0 0.25rem;
-  transition: color 0.2s;
+  padding: 0 var(--space-sm);
+  transition: color var(--transition-fast);
+  line-height: 1;
 }
 
 .error-close:hover {
-  color: white;
+  color: var(--color-text-primary);
 }
 
 /* Footer */
 .app-footer {
   text-align: center;
-  margin-top: 3rem;
-  padding-top: 1.5rem;
-  border-top: 1px solid rgba(255, 255, 255, 0.1);
-  color: rgba(255, 255, 255, 0.5);
-  font-size: 0.85rem;
+  margin-top: var(--space-3xl);
+  padding-top: var(--space-xl);
+  border-top: 1px solid var(--color-border);
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
 }
 
 .app-footer .highlight {
-  color: #a5b4fc;
+  color: var(--color-accent-secondary);
   font-weight: 600;
 }
 
-/* Responsive tweaks */
+/* Responsive */
 @media (max-width: 640px) {
-  .app-content {
-    padding: 1.5rem 1rem;
+  .generate-page {
+    padding: var(--space-lg) var(--space-md);
   }
 }

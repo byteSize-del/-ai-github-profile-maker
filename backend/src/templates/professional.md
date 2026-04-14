@@ -299,6 +299,43 @@ Each project description should answer these questions:
 - ✅ "Actively interviewing for senior backend roles. Email me at **alex@example.com**, or DM me on **[Twitter](https://twitter.com/alex)**. Check out my **[personal blog](https://blog.example.com)** for deep-dives on distributed systems."
 - ✅ "Let's chat about AI infrastructure, data systems, or anything interesting. **Contact: founder@example.com** | **[LinkedIn](https://linkedin.com)** | **[Portfolio](https://portfolio.example.com)**"
 
+### 10. ## 🏅 GitHub Trophies (Optional - include if ${userData.widgets?.trophies} is true)
+- **Format**: Centered image of GitHub trophy card
+- **URL**: Use `${trophiesUrl}` which is pre-built with correct username
+```markdown
+<p align="center">
+  <img src="${trophiesUrl}" alt="GitHub Trophies" />
+</p>
+```
+
+### 11. ## 💬 Quotes (Optional - include if ${userData.widgets?.quotes} is true)
+- **Format**: Centered quotes widget
+- **URL**: Use `${quotesUrl}` which is pre-built
+```markdown
+<p align="center">
+  <img src="${quotesUrl}" alt="Quotes" />
+</p>
+```
+
+### 12. ## 😎 Memes (Optional - include if ${userData.widgets?.memes} is true)
+- **Format**: Centered meme widget (refreshes daily)
+- **URL**: Use `${memesUrl}` which is pre-built
+```markdown
+<p align="center">
+  <img src="${memesUrl}" alt="Programming Memes" />
+</p>
+```
+
+### 13. ## ☕ Support My Work (Optional - include if ${donationHtml} is not 'NO_DONATIONS')
+- **Format**: Centered donation links
+- **Content**: Use `${donationHtml}` which contains formatted donation buttons
+- **Only include this section if** `${donationHtml}` !== 'NO_DONATIONS'
+```markdown
+<p align="center">
+  ${donationHtml}
+</p>
+```
+
 ---
 
 ## Style Guidelines
@@ -429,9 +466,17 @@ Run through this pre-output—fix anything that fails:
    - [ ] Verify each claim is something this person *could actually do* based on their role + tech stack
 
 9. **Completeness**:
-   - [ ] All 9 sections present in order
+   - [ ] All 9 core sections present in order (more if widgets are enabled)
    - [ ] No missing data (e.g., contact email not included, projects table empty)
    - [ ] Formatting is clean and consistent
+   - [ ] Optional widgets (trophies, quotes, memes, donations) only included if user selected them
+
+10. **Widget Validation** (if selected):
+    - [ ] Trophies: Uses `${trophiesUrl}` with correct GitHub username
+    - [ ] Quotes: Uses `${quotesUrl}` for rotating quotes
+    - [ ] Memes: Uses `${memesUrl}` for daily refreshing memes
+    - [ ] Donations: Only included if `${donationHtml}` !== 'NO_DONATIONS'
+    - [ ] All donation links have actual URLs (not placeholders)
 
 ---
 

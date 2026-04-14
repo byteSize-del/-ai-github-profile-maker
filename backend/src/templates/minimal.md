@@ -69,12 +69,17 @@ ${techBadgeUrls}
 ## Content Structure (In This Order)
 
 1. **Clean Header** — Typing SVG + empty line + visitor badge (for subtle asymmetry)
-2. **Hello** — 1-2 sentences. Who they are and what they do. No filler.
-3. **Stack** — Tech badges in clean rows. Let them speak.
-4. **Projects** — Name, one-line description, links. Simple, no tables.
-5. **Stats** — GitHub stats and streak, cleanly placed
-6. **Currently** — One line: what they're working on right now
-7. **Connect** — Direct social and contact links
+2. **Hello** — 1-2 sentences. Who they are and what they do. Direct, no filler.
+   - ✅ GOOD: "${name}. ${userData.role}. I build ${userData.techStack.slice(0,2).join(' and ')} systems that scale."
+   - ❌ AVOID: "Hi, I'm a developer who loves coding."
+3. **Stack** — Tech badges in clean rows. Let them speak for themselves.
+4. **Projects** — 2-3 projects with name, one-line description, tech used, and link. Simple, no tables.
+   - **Project format**: "**Project Name** — One-line description of what it does. Built with [tech]. [GitHub](link) | [Live](link)"
+   - **Description style**: Focus on what problem it solves, not features
+5. **Stats** — GitHub stats and streak, cleanly placed with proper spacing
+6. **Currently** — One line: what they're working on or learning right now
+   - Example: "Currently: Building a real-time analytics dashboard with WebSockets"
+7. **Connect** — Direct social and contact links, minimal formatting
 
 ## Style Guidelines
 

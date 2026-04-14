@@ -99,7 +99,7 @@ export function buildPrompt(userData) {
   // CRITICAL: Never fall back to display name - it will break stats URLs
   const gh = userData.githubUsername;
   const name = userData.name;
-  
+
   // Validate that we have a GitHub username
   if (!gh) {
     throw new Error('GitHub username is required for stats URLs. Please provide githubUsername in userData.');
@@ -112,7 +112,7 @@ export function buildPrompt(userData) {
 
   // Generate unique typing SVG lines each time based on profile style and user's actual tech stack
   const typingLines = getTypingLines(profileStyle, name, userData.role, userData.techStack || []);
-  
+
   // Only include typing SVG for non-job-ready profiles
   let typingSvgUrl = 'NO_TYPING_SVG';
   if (profileStyle !== 'job-ready') {
@@ -128,6 +128,30 @@ export function buildPrompt(userData) {
   const topLangsUrl = `https://github-readme-stats.vercel.app/api/top-langs/?username=${gh}&layout=compact&theme=tokyonight&hide_border=true&count_private=true`;
 
   const streakStatsUrl = `https://streak-stats.demolab.com/?user=${gh}&theme=tokyonight&hide_border=true`;
+
+  // GitHub Trophies widget
+  const trophiesUrl = `https://github-profile-trophy.vercel.app/?username=${gh}&theme=tokyonight&no-frame=true&margin-w=15&margin-h=15&no-bg=true&rank=-C`;
+
+  // Random Memes widget (refreshes daily)
+  const memesUrl = `https://readme-memes.vercel.app/api/meme`;
+
+  // Inspirational Quotes widget
+  const quotesUrl = `https://quotes-readme.vercel.app/api?theme=dark&align=center`;
+
+  // Donation links HTML
+  const donations = userData.donations || {};
+  const donationHtml = Object.entries(donations)
+    .filter(([_, url]) => url && url.trim())
+    .map(([platform, url]) => {
+      const icons = {
+        github: '💚',
+        patreon: '🎨',
+        buymeacoffee: '☕',
+        paypal: '💳'
+      };
+      return `<a href="${url}" target="_blank">${icons[platform] || '💰'} ${platform}</a>`;
+    })
+    .join(' · ');
 
   // Tech stack badges - generate as HTML img tags for proper rendering
   const techBadgeUrls = (userData.techStack || []).map(tech => {
@@ -188,7 +212,7 @@ export function buildPrompt(userData) {
   // Load template based on profile style
   const templatePath = join(__dirname, `../templates/${profileStyle}.md`);
   let templateContent;
-  
+
   try {
     templateContent = readFileSync(templatePath, 'utf-8');
   } catch (error) {
@@ -210,7 +234,11 @@ export function buildPrompt(userData) {
     .replace(/\$\{githubStatsUrl\}/g, githubStatsUrl)
     .replace(/\$\{topLangsUrl\}/g, topLangsUrl)
     .replace(/\$\{streakStatsUrl\}/g, streakStatsUrl)
-    .replace(/\$\{techBadgeUrls\}/g, techBadgeUrls);
+    .replace(/\$\{techBadgeUrls\}/g, techBadgeUrls)
+    .replace(/\$\{trophiesUrl\}/g, trophiesUrl)
+    .replace(/\$\{memesUrl\}/g, memesUrl)
+    .replace(/\$\{quotesUrl\}/g, quotesUrl)
+    .replace(/\$\{donationHtml\}/g, donationHtml || 'NO_DONATIONS');
 
   return prompt;
 }

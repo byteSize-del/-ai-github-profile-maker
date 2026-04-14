@@ -1,52 +1,86 @@
+/* ============================================
+   CREDITS WIDGET - Professional Design
+   ============================================ */
+
 .credits-widget {
-  background: rgba(255, 255, 255, 0.05);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 16px;
-  padding: 1.25rem 1.5rem;
-  margin-bottom: 2rem;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-lg);
+  margin-bottom: var(--space-xl);
+  transition: all var(--transition-base);
+}
+
+.credits-widget:hover {
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-glow);
 }
 
 .credits-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-md);
 }
 
 .credits-left {
   display: flex;
   align-items: center;
-  gap: 0.5rem;
+  gap: var(--space-sm);
 }
 
 .credits-icon {
-  font-size: 1.2rem;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--gradient-accent);
+  border-radius: var(--radius-md);
+}
+
+.credits-icon svg {
+  width: 18px;
+  height: 18px;
+  color: white;
 }
 
 .credits-label {
-  font-size: 0.9rem;
-  color: rgba(255, 255, 255, 0.7);
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: var(--color-text-secondary);
 }
 
 .credits-value {
-  font-size: 1.4rem;
+  font-family: var(--font-display);
+  font-size: 1.5rem;
   font-weight: 700;
 }
 
 .credits-bar {
-  background: rgba(255, 255, 255, 0.1);
-  height: 8px;
-  border-radius: 4px;
+  background: var(--color-bg-tertiary);
+  height: 6px;
+  border-radius: var(--radius-full);
   overflow: hidden;
-  margin-bottom: 0.75rem;
+  margin-bottom: var(--space-md);
 }
 
 .credits-fill {
   height: 100%;
-  border-radius: 4px;
-  transition: width 0.4s ease, background 0.3s ease;
+  border-radius: var(--radius-full);
+  transition: width 0.5s ease, background 0.3s ease;
+}
+
+.credits-fill.high {
+  background: var(--gradient-accent);
+}
+
+.credits-fill.medium {
+  background: linear-gradient(90deg, var(--color-warning), #fbbf24);
+}
+
+.credits-fill.low {
+  background: linear-gradient(90deg, var(--color-error), #f87171);
 }
 
 .credits-footer {
@@ -54,24 +88,40 @@
   justify-content: space-between;
   align-items: center;
   flex-wrap: wrap;
-  gap: 0.5rem;
+  gap: var(--space-sm);
 }
 
-.credits-info-text {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.6);
+.credits-info {
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--color-text-tertiary);
+  font-size: 0.8125rem;
+}
+
+.credits-info svg {
+  width: 14px;
+  height: 14px;
 }
 
 .credits-timer {
-  font-size: 0.8rem;
-  color: rgba(255, 255, 255, 0.5);
-  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: var(--space-xs);
+  color: var(--color-text-muted);
+  font-size: 0.8125rem;
+  font-family: var(--font-mono);
+}
+
+.credits-timer svg {
+  width: 14px;
+  height: 14px;
 }
 
 @media (max-width: 640px) {
   .credits-footer {
     flex-direction: column;
     align-items: flex-start;
-    gap: 0.25rem;
+    gap: var(--space-sm);
   }
 }

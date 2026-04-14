@@ -1,13 +1,42 @@
 import { supabaseAdmin } from '../utils/supabase.js';
 import { v4 as uuidv4 } from 'uuid';
+import crypto from 'crypto';
 
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
 
-export async function exchangeGitHubCode(code) {
+/**
+ * Generate a random state token for CSRF protection
+ * SECURITY: Prevents CSRF attacks by verifying OAuth request origin
+ */
+export function generateOAuthState() {
+  return crypto.randomBytes(32).toString('hex');
+}
+
+/**
+ * Validate OAuth state token
+ * SECURITY: Ensures callback came from our authorization request
+ */
+export function validateOAuthState(providedState, storedState) {
+  if (!providedState || !storedState) {
+    throw new Error('Missing state parameter');
+  }
+  // Use constant-time comparison to prevent timing attacks
+  if (!crypto.timingSafeEqual(Buffer.from(providedState), Buffer.from(storedState))) {
+    throw new Error('Invalid state parameter - CSRF detected');
+  }
+}
+
+export async function exchangeGitHubCode(code, state) {
   if (!GITHUB_CLIENT_ID || !GITHUB_CLIENT_SECRET) {
     throw new Error('GitHub OAuth credentials not configured');
   }
+
+  if (!code) {
+    throw new Error('Missing authorization code');
+  }
+
+  // State validation is done in the route handler before calling this function
 
   // Exchange code for access token
   const tokenResponse = await fetch('https://github.com/login/oauth/access_token', {
@@ -15,6 +44,7 @@ export async function exchangeGitHubCode(code) {
     headers: {
       'Accept': 'application/json',
       'Content-Type': 'application/json',
+      'User-Agent': 'AI-GitHub-Profile-Maker',
     },
     body: JSON.stringify({
       client_id: GITHUB_CLIENT_ID,
@@ -41,6 +71,7 @@ export async function getGitHubUserInfo(accessToken) {
     headers: {
       'Authorization': `Bearer ${accessToken}`,
       'Accept': 'application/vnd.github+json',
+      'User-Agent': 'AI-GitHub-Profile-Maker',
     },
   });
 
@@ -56,6 +87,7 @@ export async function getGitHubUserInfo(accessToken) {
       headers: {
         'Authorization': `Bearer ${accessToken}`,
         'Accept': 'application/vnd.github+json',
+        'User-Agent': 'AI-GitHub-Profile-Maker',
       },
     });
 
@@ -107,17 +139,4 @@ export async function getOrCreateSupabaseUser(gitHubUserData) {
   }
 
   return newUser;
-}
-
-export async function createSessionToken(userId, gitHubUserData) {
-  // In production, use a proper session store (Redis, database, etc.)
-  // For now, we'll return user data to be stored in httpOnly cookie
-  return {
-    id: userId,
-    login: gitHubUserData.login,
-    avatar_url: gitHubUserData.avatar_url,
-    bio: gitHubUserData.bio,
-    email: gitHubUserData.email,
-    created_at: gitHubUserData.created_at,
-  };
 }

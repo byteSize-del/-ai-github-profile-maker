@@ -1,206 +1,240 @@
+/* ============================================
+   ABOUT PAGE - Professional Design
+   ============================================ */
+
 .about-page {
   min-height: 100vh;
-  padding: 2rem 1rem;
-  max-width: 1200px;
+  padding: var(--space-3xl) var(--space-lg);
+  max-width: 1280px;
   margin: 0 auto;
 }
 
 /* Header */
 .about-header {
   text-align: center;
-  padding: 4rem 0;
+  padding: var(--space-3xl) 0;
 }
 
 .about-header h1 {
-  font-size: 3rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  background: linear-gradient(135deg, #58a6ff 0%, #8b5cf6 100%);
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 3.5rem);
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  background: var(--gradient-accent);
   -webkit-background-clip: text;
-  background-clip: text;
   -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
 .about-header p {
-  font-size: 1.25rem;
-  color: #8b949e;
+  font-size: clamp(1rem, 2vw, 1.25rem);
+  color: var(--color-text-secondary);
+  max-width: 600px;
+  margin: 0 auto;
 }
 
 /* What We Provide */
 .what-we-provide {
-  padding: 4rem 0;
+  padding: var(--space-3xl) 0;
 }
 
 .what-we-provide h2 {
-  font-size: 2.5rem;
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
   text-align: center;
-  margin-bottom: 3rem;
-  color: #ffffff;
+  margin-bottom: var(--space-2xl);
+  color: var(--color-text-primary);
 }
 
 .provide-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 2rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: var(--space-lg);
 }
 
 .provide-item {
-  background: #161b22;
-  border: 1px solid #30363d;
-  border-radius: 12px;
-  padding: 2rem;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
   text-align: center;
-  transition: transform 0.2s, border-color 0.2s;
+  transition: all var(--transition-base);
 }
 
 .provide-item:hover {
   transform: translateY(-4px);
-  border-color: #58a6ff;
+  border-color: var(--color-accent-primary);
+  box-shadow: var(--shadow-glow);
 }
 
 .provide-icon {
-  font-size: 3rem;
-  margin-bottom: 1rem;
+  width: 64px;
+  height: 64px;
+  margin: 0 auto var(--space-md);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--color-bg-tertiary);
+  border-radius: var(--radius-lg);
+  font-size: 2rem;
 }
 
 .provide-item h3 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 0.75rem;
-  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+  color: var(--color-text-primary);
 }
 
 .provide-item p {
-  color: #8b949e;
+  color: var(--color-text-tertiary);
   line-height: 1.6;
+  font-size: 0.9375rem;
 }
 
 /* How It Works */
 .how-it-works {
-  padding: 4rem 0;
+  padding: var(--space-3xl) 0;
 }
 
 .how-it-works h2 {
-  font-size: 2.5rem;
-  font-weight: 800;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
   text-align: center;
-  margin-bottom: 3rem;
-  color: #ffffff;
+  margin-bottom: var(--space-2xl);
+  color: var(--color-text-primary);
 }
 
 .steps-timeline {
   display: flex;
   flex-direction: column;
-  gap: 2rem;
+  gap: var(--space-lg);
   max-width: 800px;
   margin: 0 auto;
 }
 
 .timeline-step {
   display: flex;
-  gap: 2rem;
+  gap: var(--space-xl);
   align-items: flex-start;
-  background: #161b22;
-  border: 1px solid #30363d;
-  border-radius: 12px;
-  padding: 2rem;
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-xl);
+  padding: var(--space-xl);
+  transition: all var(--transition-base);
+}
+
+.timeline-step:hover {
+  border-color: var(--color-border);
+  box-shadow: var(--shadow-sm);
 }
 
 .step-number {
   flex-shrink: 0;
-  width: 60px;
-  height: 60px;
-  background: linear-gradient(135deg, #58a6ff 0%, #8b5cf6 100%);
-  border-radius: 50%;
+  width: 56px;
+  height: 56px;
+  background: var(--gradient-accent);
+  border-radius: var(--radius-full);
   display: flex;
   align-items: center;
   justify-content: center;
+  font-family: var(--font-display);
   font-size: 1.5rem;
-  font-weight: 800;
+  font-weight: 700;
   color: white;
+  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
 }
 
 .step-content h3 {
-  font-size: 1.25rem;
-  font-weight: 700;
-  margin-bottom: 0.5rem;
-  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: 1.125rem;
+  font-weight: 600;
+  margin-bottom: var(--space-sm);
+  color: var(--color-text-primary);
 }
 
 .step-content p {
-  color: #8b949e;
+  color: var(--color-text-tertiary);
   line-height: 1.6;
+  font-size: 0.9375rem;
 }
 
 /* Our Mission */
 .our-mission {
-  padding: 4rem 2rem;
-  background: linear-gradient(135deg, rgba(88, 166, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
-  border: 1px solid rgba(88, 166, 255, 0.2);
-  border-radius: 16px;
-  margin: 4rem 0;
+  padding: var(--space-3xl);
+  background: var(--color-bg-secondary);
+  border: 1px solid var(--color-border-subtle);
+  border-radius: var(--radius-2xl);
+  margin: var(--space-3xl) 0;
+  text-align: center;
 }
 
 .our-mission h2 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  text-align: center;
-  margin-bottom: 2rem;
-  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: var(--space-xl);
+  color: var(--color-text-primary);
 }
 
 .our-mission p {
   font-size: 1.125rem;
   line-height: 1.8;
-  color: #c9d1d9;
-  text-align: center;
+  color: var(--color-text-secondary);
   max-width: 800px;
-  margin: 0 auto 1.5rem;
+  margin: 0 auto var(--space-md);
 }
 
 /* CTA */
 .about-cta {
   text-align: center;
-  padding: 4rem 2rem;
+  padding: var(--space-3xl) 0;
 }
 
 .about-cta h2 {
-  font-size: 2.5rem;
-  font-weight: 800;
-  margin-bottom: 1rem;
-  color: #ffffff;
+  font-family: var(--font-display);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-weight: 700;
+  margin-bottom: var(--space-md);
+  color: var(--color-text-primary);
 }
 
 .about-cta p {
   font-size: 1.125rem;
-  color: #8b949e;
-  margin-bottom: 2rem;
+  color: var(--color-text-secondary);
+  margin-bottom: var(--space-xl);
+  max-width: 500px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .btn-about-cta {
-  background: linear-gradient(135deg, #58a6ff 0%, #8b5cf6 100%);
+  display: inline-flex;
+  align-items: center;
+  gap: var(--space-sm);
+  padding: var(--space-md) var(--space-xl);
+  background: var(--gradient-accent);
   color: white;
-  padding: 1rem 2.5rem;
-  border-radius: 8px;
-  font-weight: 700;
-  font-size: 1.1rem;
+  font-size: 1rem;
+  font-weight: 600;
+  border-radius: var(--radius-lg);
   text-decoration: none;
-  display: inline-block;
-  transition: transform 0.2s, box-shadow 0.2s;
+  transition: all var(--transition-base);
+  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.3);
 }
 
 .btn-about-cta:hover {
   transform: translateY(-2px);
-  box-shadow: 0 8px 24px rgba(88, 166, 255, 0.3);
+  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.4);
+  color: white;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .about-header h1 {
-    font-size: 2rem;
-  }
-
+  .about-header h1,
   .what-we-provide h2,
   .how-it-works h2,
   .our-mission h2,
@@ -212,5 +246,9 @@
     flex-direction: column;
     align-items: center;
     text-align: center;
+  }
+
+  .our-mission {
+    padding: var(--space-2xl);
   }
 }

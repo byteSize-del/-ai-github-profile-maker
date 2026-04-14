@@ -10,52 +10,70 @@ import { limiter } from './middleware/rateLimit.js';
 
 const app = express();
 
-// Security middleware
-app.use(helmet());
-app.use(cors({
+// Verify required security configuration
+const JWT_SECRET = process.env.JWT_SECRET;
+if (!JWT_SECRET) {
+  console.warn('⚠️  WARNING: JWT_SECRET not configured. Session tokens will not be secure.');
+}
+
+// SECURITY: Strict CORS configuration - only allow approved origins
+const ALLOWED_ORIGINS = [
+  process.env.FRONTEND_URL,  // Deployed frontend
+  'https://ai-github-profile-frontend.vercel.app',
+  'https://ai-github-profile-maker.vercel.app',
+  // Development only - should be removed in production
+  process.env.NODE_ENV === 'development' ? 'http://localhost:5173' : null,
+  process.env.NODE_ENV === 'development' ? 'http://127.0.0.1:5173' : null,
+].filter(Boolean);
+
+// Enhanced CORS with strict origin validation
+const corsOptions = {
   origin: function(origin, callback) {
-    const allowedOrigins = [
-      process.env.FRONTEND_URL || 'http://localhost:5173',
-      'https://ai-github-profile-frontend.vercel.app',
-      'http://localhost:5173',
-      'http://localhost:3000',
-    ];
-    
-    // Allow requests without origin (like from mobile apps or curl)
-    // Allow any origin from localhost
-    // Check against allowed origins
-    if (!origin || origin.includes('localhost') || origin.includes('127.0.0.1') || allowedOrigins.includes(origin)) {
+    // Requests without origin (same-site requests, mobile apps, curl)
+    // are allowed but still need valid credentials
+    if (!origin) {
+      return callback(null, true);
+    }
+
+    // SECURITY: Only allow exact origin matches, no wildcards or pattern matching
+    if (ALLOWED_ORIGINS.includes(origin)) {
       callback(null, true);
     } else {
-      console.warn(`CORS blocked origin: ${origin}`);
-      callback(new Error('Not allowed by CORS'));
+      console.warn(`🔒 CORS blocked unauthorized origin: ${origin}`);
+      callback(new Error('CORS policy violation'));
     }
   },
-  credentials: true,
+  credentials: true,  // Allow cookies
   methods: ['GET', 'POST', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
+  maxAge: 3600,  // Preflight cache 1 hour
+};
+
+// Security middleware
+app.use(helmet({
+  contentSecurityPolicy: {
+    directives: {
+      defaultSrc: ["'self'"],
+      scriptSrc: ["'self'"],
+      styleSrc: ["'self'", "'unsafe-inline'"],
+      imgSrc: ["'self'", "https:", "data:"],
+      connectSrc: ["'self'"],
+    },
+  },
+  frameguard: { action: 'deny' },
+  noSniff: true,
+  xssFilter: true,
 }));
 
-// Preflight requests
-app.options('*', cors({
-  origin: function(origin, callback) {
-    const allowedOrigins = [
-      process.env.FRONTEND_URL || 'http://localhost:5173',
-      'https://ai-github-profile-frontend.vercel.app',
-      'http://localhost:5173',
-      'http://localhost:3000',
-    ];
-    
-    if (!origin || allowedOrigins.includes(origin)) {
-      callback(null, true);
-    } else {
-      callback(new Error('Not allowed by CORS'));
-    }
-  },
-  credentials: true,
+app.use(cors(corsOptions));
+
+// Preflight handling
+app.options('*', cors(corsOptions));
+
+app.use(express.json({
+  limit: '10kb',  // Reject requests larger than 10KB to prevent DoS
 }));
-app.use(express.json());
-app.use(cookieParser());
+app.use(cookieParser(process.env.COOKIE_SECRET || 'default-secret'));
 
 // Rate limiting
 app.use(limiter);
@@ -74,6 +92,7 @@ const PORT = process.env.PORT || 4000;
 app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/health`);
+  console.log(`🔒 Security: CORS restricted to ${ALLOWED_ORIGINS.length} origin(s)`);
 });
 
 export default app;

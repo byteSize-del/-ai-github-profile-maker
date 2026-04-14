@@ -25,40 +25,72 @@ function PricingPage() {
             </div>
             <div className="tier-features">
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>30 free credits per day</span>
               </div>
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>2 profile generations daily (15 credits each)</span>
               </div>
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>All AI providers (Groq, OpenRouter, NVIDIA)</span>
               </div>
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>Full customization options</span>
               </div>
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>Preview & copy to clipboard</span>
               </div>
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>Download as README.md</span>
               </div>
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>GitHub stats integration</span>
               </div>
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>Community support</span>
               </div>
             </div>
-            <Link to="/generate" className="btn-pricing-free">
-              Get Started Free →
+            <Link to="/generate" className="btn-pricing btn-pricing-primary">
+              Get Started Free
             </Link>
           </div>
         </div>
@@ -77,46 +109,78 @@ function PricingPage() {
             </div>
             <div className="tier-features">
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span><strong>Unlimited</strong> profile generations</span>
               </div>
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>Priority AI processing (faster results)</span>
               </div>
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>Premium AI models (GPT-4, Claude)</span>
               </div>
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>Advanced customization themes</span>
               </div>
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>Profile history & versioning</span>
               </div>
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>Custom domains for profile pages</span>
               </div>
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>API access for automation</span>
               </div>
               <div className="feature">
-                <span className="feature-check">✓</span>
+                <span className="feature-check">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="3">
+                    <polyline points="20 6 9 17 4 12" />
+                  </svg>
+                </span>
                 <span>Priority email support</span>
               </div>
             </div>
-            <button className="btn-pricing-pro" disabled>
+            <button className="btn-pricing btn-pricing-secondary" disabled>
               Coming Soon
             </button>
           </div>
         </div>
       </section>
 
-      {/* Comparison FAQ */}
+      {/* FAQ */}
       <section className="pricing-faq">
         <h2>Frequently Asked Questions</h2>
         <div className="faq-grid">
@@ -144,7 +208,10 @@ function PricingPage() {
         <h2>Ready to Create Your Profile?</h2>
         <p>Start with our free tier—no signup, no credit card required.</p>
         <Link to="/generate" className="btn-pricing-cta">
-          Start Creating Free Profiles ✨
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+            <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
+          </svg>
+          Start Creating Free Profiles
         </Link>
       </section>
     </div>
