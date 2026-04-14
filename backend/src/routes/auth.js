@@ -1,8 +1,15 @@
 import { Router } from 'express';
 import { exchangeGitHubCode, getGitHubUserInfo, getOrCreateSupabaseUser, generateOAuthState, validateOAuthState } from '../services/github.js';
-import { createSessionToken } from '../middleware/auth.js';
+import { createSessionToken, extractSessionUser } from '../middleware/auth.js';
 
 const router = Router();
+const isProduction = process.env.NODE_ENV === 'production';
+const authCookieOptions = {
+  httpOnly: true,
+  secure: isProduction,
+  // Cross-site frontend (Vercel) -> backend (Render) requires SameSite=None in production.
+  sameSite: isProduction ? 'none' : 'lax',
+};
 
 /**
  * GET /api/auth/oauth-state
@@ -14,9 +21,7 @@ router.get('/oauth-state', (req, res) => {
     
     // Store state in httpOnly cookie to verify in callback
     res.cookie('oauth_state', state, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',  // Prevent cross-site cookie transmission
+      ...authCookieOptions,
       maxAge: 10 * 60 * 1000,  // 10 minute expiry
     });
 
@@ -52,7 +57,7 @@ router.post('/callback', async (req, res) => {
     }
 
     // Clear the used state token
-    res.clearCookie('oauth_state');
+    res.clearCookie('oauth_state', authCookieOptions);
 
     // Exchange code for access token
     const accessToken = await exchangeGitHubCode(code, state);
@@ -68,9 +73,7 @@ router.post('/callback', async (req, res) => {
 
     // Set httpOnly cookie with JWT token
     res.cookie('session', sessionToken, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',  // Prevent cross-site cookie transmission
+      ...authCookieOptions,
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     });
 
@@ -90,7 +93,7 @@ router.post('/callback', async (req, res) => {
  * GET /api/auth/me
  * Get current user info (requires valid JWT session)
  */
-router.get('/me', (req, res) => {
+router.get('/me', extractSessionUser, (req, res) => {
   try {
     // Session validation is done by the auth middleware
     const user = req.user;
@@ -114,8 +117,8 @@ router.get('/me', (req, res) => {
  * Clear session and invalidate token
  */
 router.post('/logout', (req, res) => {
-  res.clearCookie('session');
-  res.clearCookie('oauth_state');
+  res.clearCookie('session', authCookieOptions);
+  res.clearCookie('oauth_state', authCookieOptions);
   res.json({ success: true });
 });
 
