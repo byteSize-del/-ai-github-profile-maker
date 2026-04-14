@@ -25,6 +25,18 @@
   color: var(--color-text-primary);
 }
 
+.footer-logo {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+}
+
+.footer-logo-image {
+  width: 28px;
+  height: 28px;
+  border-radius: 8px;
+}
+
 .footer-description {
   margin-top: 0.5rem;
   color: var(--color-text-secondary);

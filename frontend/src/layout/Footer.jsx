@@ -1,4 +1,5 @@
 import { Link } from 'react-router-dom';
+import logoMark from '../assets/profileforge-logo.svg';
 import './Footer.css';
 
 function Footer() {
@@ -6,7 +7,10 @@ function Footer() {
     <footer className="footer">
       <div className="footer-container">
         <div className="footer-brand">
-          <div className="footer-logo"><span className="footer-logo-text">ProfileForge</span></div>
+          <div className="footer-logo">
+            <img src={logoMark} alt="ProfileForge logo" className="footer-logo-image" />
+            <span className="footer-logo-text">ProfileForge</span>
+          </div>
           <p className="footer-description">
             Premium GitHub profile platform for professional developers and teams.
           </p>

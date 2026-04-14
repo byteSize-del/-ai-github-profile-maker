@@ -5,7 +5,7 @@ import './ProfileWizard.css';
 // SECURITY: Input validation schemas to prevent injection attacks
 const fieldSchemas = {
   name: z.string().trim().min(1, 'Name required').max(100, 'Name too long').regex(/^[a-zA-Z0-9\s\-'.]+$/, 'Invalid characters in name'),
-  githubUsername: z.string().min(1, 'Username required').max(39, 'Username too long').regex(/^[a-zA-Z0-9-]+$/, 'Invalid GitHub username format'),
+  githubUsername: z.string().min(1, 'Username required').max(39, 'Username too long').regex(/^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,37}[a-zA-Z0-9])?$/, 'Invalid GitHub username format'),
   role: z.string().trim().min(1, 'Role required').max(100, 'Role too long').regex(/^[a-zA-Z0-9\s\-&,.]+$/, 'Invalid characters in role'),
   bio: z.string().trim().min(1, 'Bio required').max(500, 'Bio too long (max 500 chars)'),
 };

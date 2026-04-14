@@ -1,6 +1,7 @@
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import { useAuth } from '../hooks/useAuth';
+import logoMark from '../assets/profileforge-logo.svg';
 import './Navbar.css';
 
 function Navbar() {
@@ -35,9 +36,7 @@ function Navbar() {
       <div className="navbar-container">
         <Link to="/" className="navbar-logo">
           <span className="logo-icon">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" strokeWidth="2.5">
-              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-            </svg>
+            <img src={logoMark} alt="ProfileForge logo" className="logo-image" />
           </span>
           <span className="logo-text">Profile<span>Forge</span></span>
         </Link>

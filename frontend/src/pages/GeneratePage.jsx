@@ -9,7 +9,7 @@ import '../App.css';
 const userDataSchema = z.object({
   profileStyle: z.enum(['professional', 'job-ready', 'casual', 'minimal']).default('professional'),
   name: z.string().trim().min(1).max(100).regex(/^[a-zA-Z0-9\s\-'.]+$/),
-  githubUsername: z.string().min(1).max(39).regex(/^[a-zA-Z0-9-]+$/),
+  githubUsername: z.string().min(1).max(39).regex(/^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,37}[a-zA-Z0-9])?$/),
   role: z.string().trim().min(1).max(100).regex(/^[a-zA-Z0-9\s\-&,.]+$/),
   bio: z.string().trim().min(1).max(500),
   techStack: z.array(z.string().max(50)).default([]),

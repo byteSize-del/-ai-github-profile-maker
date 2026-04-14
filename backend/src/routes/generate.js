@@ -27,12 +27,12 @@ const userDataSchema = Joi.object({
       'any.required': 'Name is required',
     }),
   githubUsername: Joi.string()
-    .alphanum()
     .min(1)
     .max(39)  // GitHub max username length
     .required()
+    .pattern(/^[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,37}[a-zA-Z0-9])?$/, 'github username')
     .messages({
-      'string.alphanum': 'GitHub username can only contain alphanumeric characters and hyphens',
+      'string.pattern.name': 'GitHub username can only contain alphanumeric characters and hyphens',
       'any.required': 'GitHub username is required',
     }),
   role: Joi.string()
