@@ -2,7 +2,7 @@
 const creditStore = new Map();
 
 const DAILY_CREDITS = parseInt(process.env.DAILY_CREDITS) || 30;
-const CREDITS_PER_USE = parseInt(process.env.CREDITS_PER_USE) || 5;
+const CREDITS_PER_USE = parseInt(process.env.CREDITS_PER_USE) || 15;
 const CREDIT_RESET_HOUR = parseInt(process.env.CREDIT_RESET_HOUR) || 0;
 
 function getMidnightUTC() {

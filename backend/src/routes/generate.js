@@ -5,7 +5,7 @@ import { checkCredits, deductCredits } from '../middleware/credits.js';
 import { extractSessionUser } from '../middleware/auth.js';
 
 const router = Router();
-const CREDITS_PER_USE = parseInt(process.env.CREDITS_PER_USE) || 5;
+const CREDITS_PER_USE = parseInt(process.env.CREDITS_PER_USE) || 15;
 
 // Post-process function to fix stats URLs and ensure correct GitHub username is used
 function ensureStatsRendered(readme, urls, profileStyle, correctUsername) {

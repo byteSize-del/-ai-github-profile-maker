@@ -2,7 +2,7 @@ import { getCredits as getCreditsFromMemory, deductCredits as deductCreditsFromM
 import { isSupabaseConfigured } from '../utils/supabase.js';
 import { getCredits as getCreditsFromSupabase, deductCredits as deductCreditsFromSupabase } from '../db/supabase.js';
 
-const CREDITS_PER_USE = parseInt(process.env.CREDITS_PER_USE) || 5;
+const CREDITS_PER_USE = parseInt(process.env.CREDITS_PER_USE) || 15;
 
 async function getCreditsHybrid(userId) {
   if (isSupabaseConfigured()) {
