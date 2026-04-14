@@ -1,0 +1,216 @@
+.about-page {
+  min-height: 100vh;
+  padding: 2rem 1rem;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Header */
+.about-header {
+  text-align: center;
+  padding: 4rem 0;
+}
+
+.about-header h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  background: linear-gradient(135deg, #58a6ff 0%, #8b5cf6 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.about-header p {
+  font-size: 1.25rem;
+  color: #8b949e;
+}
+
+/* What We Provide */
+.what-we-provide {
+  padding: 4rem 0;
+}
+
+.what-we-provide h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #ffffff;
+}
+
+.provide-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+}
+
+.provide-item {
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 2rem;
+  text-align: center;
+  transition: transform 0.2s, border-color 0.2s;
+}
+
+.provide-item:hover {
+  transform: translateY(-4px);
+  border-color: #58a6ff;
+}
+
+.provide-icon {
+  font-size: 3rem;
+  margin-bottom: 1rem;
+}
+
+.provide-item h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.75rem;
+  color: #ffffff;
+}
+
+.provide-item p {
+  color: #8b949e;
+  line-height: 1.6;
+}
+
+/* How It Works */
+.how-it-works {
+  padding: 4rem 0;
+}
+
+.how-it-works h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 3rem;
+  color: #ffffff;
+}
+
+.steps-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.timeline-step {
+  display: flex;
+  gap: 2rem;
+  align-items: flex-start;
+  background: #161b22;
+  border: 1px solid #30363d;
+  border-radius: 12px;
+  padding: 2rem;
+}
+
+.step-number {
+  flex-shrink: 0;
+  width: 60px;
+  height: 60px;
+  background: linear-gradient(135deg, #58a6ff 0%, #8b5cf6 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.5rem;
+  font-weight: 800;
+  color: white;
+}
+
+.step-content h3 {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-bottom: 0.5rem;
+  color: #ffffff;
+}
+
+.step-content p {
+  color: #8b949e;
+  line-height: 1.6;
+}
+
+/* Our Mission */
+.our-mission {
+  padding: 4rem 2rem;
+  background: linear-gradient(135deg, rgba(88, 166, 255, 0.1) 0%, rgba(139, 92, 246, 0.1) 100%);
+  border: 1px solid rgba(88, 166, 255, 0.2);
+  border-radius: 16px;
+  margin: 4rem 0;
+}
+
+.our-mission h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  text-align: center;
+  margin-bottom: 2rem;
+  color: #ffffff;
+}
+
+.our-mission p {
+  font-size: 1.125rem;
+  line-height: 1.8;
+  color: #c9d1d9;
+  text-align: center;
+  max-width: 800px;
+  margin: 0 auto 1.5rem;
+}
+
+/* CTA */
+.about-cta {
+  text-align: center;
+  padding: 4rem 2rem;
+}
+
+.about-cta h2 {
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 1rem;
+  color: #ffffff;
+}
+
+.about-cta p {
+  font-size: 1.125rem;
+  color: #8b949e;
+  margin-bottom: 2rem;
+}
+
+.btn-about-cta {
+  background: linear-gradient(135deg, #58a6ff 0%, #8b5cf6 100%);
+  color: white;
+  padding: 1rem 2.5rem;
+  border-radius: 8px;
+  font-weight: 700;
+  font-size: 1.1rem;
+  text-decoration: none;
+  display: inline-block;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.btn-about-cta:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 24px rgba(88, 166, 255, 0.3);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .about-header h1 {
+    font-size: 2rem;
+  }
+
+  .what-we-provide h2,
+  .how-it-works h2,
+  .our-mission h2,
+  .about-cta h2 {
+    font-size: 2rem;
+  }
+
+  .timeline-step {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+}
