@@ -89,6 +89,31 @@ function getErrorStatus(error) {
   return error?.status || error?.response?.status || null;
 }
 
+function shouldSkipRemainingKeys(error) {
+  const message = String(error?.message || '').toLowerCase();
+
+  // Prompt/model limits are not key-specific; switch providers immediately.
+  if (
+    message.includes('request too large') ||
+    message.includes('context length') ||
+    message.includes('maximum context') ||
+    message.includes('tokens per minute')
+  ) {
+    return true;
+  }
+
+  // Upstream/provider-level failures are usually not fixed by rotating keys.
+  if (
+    message.includes('provider returned error') ||
+    message.includes('upstream') ||
+    message.includes('service unavailable')
+  ) {
+    return true;
+  }
+
+  return false;
+}
+
 function resolveProviderOrder() {
   const configuredProviders = Object.entries(providers)
     .filter(([, { envPrefix }]) => getProviderKeys(envPrefix).length > 0)
@@ -170,6 +195,11 @@ export async function generateReadme(prompt) {
         const status = getErrorStatus(err);
         console.error(`Provider ${name} failed on key slot ${keyIndex + 1}/${rotatedKeys.length}:`, err.message);
         allErrors.push({ provider: name, keySlot: keyIndex + 1, status, error: err.message });
+
+        if (shouldSkipRemainingKeys(err)) {
+          console.warn(`Skipping remaining keys for ${name}: non-key-specific failure detected`);
+          break;
+        }
 
         // Rate limit or transient upstream failure: try the next key/provider quickly.
         if (status === 429 || status === 503) {
