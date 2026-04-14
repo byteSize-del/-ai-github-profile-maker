@@ -98,7 +98,7 @@ export async function getCredits(userId) {
 
   const { data: user, error } = await supabaseAdmin
     .from('users')
-    .select('credits_available, last_credit_reset')
+    .select('id, credits_available, last_credit_reset')
     .eq('id', userId)
     .single();
 

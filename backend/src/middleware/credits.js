@@ -18,9 +18,9 @@ async function getCreditsHybrid(userId) {
 
 export async function checkCredits(req, res, next) {
   try {
-    const { userId } = req.body;
+    const userId = req.userId || req.body?.userId;
     if (!userId) {
-      return res.status(400).json({ error: 'userId is required' });
+      return res.status(401).json({ error: 'Not authenticated' });
     }
 
     const { credits, resetAt } = await getCreditsHybrid(userId);

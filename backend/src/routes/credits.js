@@ -6,7 +6,11 @@ const router = Router();
 
 router.get('/', extractSessionUser, async (req, res) => {
   try {
-    const userId = req.body.userId;
+    const userId = req.userId;
+    if (!userId) {
+      return res.status(401).json({ error: 'Not authenticated' });
+    }
+
     const { credits, resetAt } = await getCredits(userId);
     res.json({ credits, resetAt });
   } catch (error) {

@@ -52,11 +52,20 @@ function GeneratePage() {
       const res = await fetch(`${API_URL}/api/credits`, {
         credentials: 'include',
       });
+
+      if (!res.ok) {
+        setCredits(0);
+        setResetAt(null);
+        return;
+      }
+
       const data = await res.json();
-      setCredits(data.credits);
-      setResetAt(data.resetAt);
+      setCredits(Number.isFinite(data.credits) ? data.credits : 0);
+      setResetAt(typeof data.resetAt === 'string' ? data.resetAt : null);
     } catch (err) {
       console.error('Failed to fetch credits:', err);
+      setCredits(0);
+      setResetAt(null);
     }
   };
 
