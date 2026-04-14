@@ -199,6 +199,19 @@ export async function saveGeneration(userId, generationData) {
     throw new Error('Supabase not configured');
   }
 
+  let normalizedInput = generationData.input;
+  if (typeof normalizedInput === 'string') {
+    try {
+      normalizedInput = JSON.parse(normalizedInput);
+    } catch {
+      normalizedInput = { raw: generationData.input };
+    }
+  }
+
+  const normalizedGenerationTime = Number.isFinite(generationData.generationTime)
+    ? Math.max(0, Math.trunc(generationData.generationTime))
+    : null;
+
   const { data: generations, error } = await supabaseAdmin
     .from('generations')
     .insert([
@@ -206,12 +219,12 @@ export async function saveGeneration(userId, generationData) {
         user_id: userId,
         github_username: generationData.github_username,
         profile_template: generationData.template,
-        input_data: typeof generationData.input === 'string' ? generationData.input : JSON.stringify(generationData.input),
+        input_data: normalizedInput,
         generated_readme: generationData.readme,
         credits_used: CREDITS_PER_USE,
         ai_provider: generationData.provider,
         ai_model: generationData.model,
-        generation_time_ms: generationData.generationTime,
+        generation_time_ms: normalizedGenerationTime,
         status: 'completed',
       },
     ])
@@ -223,6 +236,35 @@ export async function saveGeneration(userId, generationData) {
 
   // Return the first inserted record
   return Array.isArray(generations) ? generations[0] : generations;
+}
+
+/**
+ * Auto-save a generated profile snapshot linked to a generation.
+ */
+export async function saveProfileSnapshot(userId, generationId, profileData = {}) {
+  if (!supabaseAdmin) {
+    throw new Error('Supabase not configured');
+  }
+
+  const payload = {
+    user_id: userId,
+    generation_id: generationId,
+    title: profileData.title || null,
+    notes: profileData.notes || null,
+    is_favorite: !!profileData.isFavorite,
+  };
+
+  const { data: savedProfile, error } = await supabaseAdmin
+    .from('saved_profiles')
+    .insert([payload])
+    .select('*')
+    .single();
+
+  if (error) {
+    throw error;
+  }
+
+  return savedProfile;
 }
 
 /**

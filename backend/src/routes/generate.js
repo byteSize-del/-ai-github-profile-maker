@@ -4,7 +4,7 @@ import { generateReadme } from '../services/provider.js';
 import { buildPrompt } from '../utils/prompt.js';
 import { checkCredits, deductCredits } from '../middleware/credits.js';
 import { extractSessionUser } from '../middleware/auth.js';
-import { saveGeneration } from '../db/supabase.js';
+import { saveGeneration, saveProfileSnapshot } from '../db/supabase.js';
 
 const router = Router();
 const CREDITS_PER_USE = parseInt(process.env.CREDITS_PER_USE) || 15;
@@ -275,8 +275,10 @@ router.post('/', extractSessionUser, checkCredits, async (req, res) => {
       return res.status(413).json({ error: 'Generated prompt too large' });
     }
     console.log(`Prompt size: ${promptSize} bytes (~${Math.round(promptSize / 4)} tokens)`);
-    
+
+    const generationStart = Date.now();
     const { result, provider } = await generateReadme(prompt);
+    const generationDurationMs = Date.now() - generationStart;
 
     // Post-process to ensure stats are rendered as images, not code
     const correctGithubUsername = userData.githubUsername || '';
@@ -295,16 +297,28 @@ router.post('/', extractSessionUser, checkCredits, async (req, res) => {
 
     // Save generation to database
     try {
-      await saveGeneration(userId, {
+      const savedGeneration = await saveGeneration(userId, {
         github_username: userData.githubUsername,
         template: userData.profileStyle || 'professional',
         input: userData, // Store the input data
         readme: processedReadme,
         provider: provider,
         model: 'groq', // Default model
-        generationTime: Date.now(), // Can be improved with actual timing
+        generationTime: generationDurationMs,
       });
       console.log(`[Generate] Successfully saved generation for user ${userId}`);
+
+      if (savedGeneration?.id) {
+        try {
+          await saveProfileSnapshot(userId, savedGeneration.id, {
+            title: `${userData.githubUsername} • ${userData.profileStyle || 'professional'}`,
+            notes: 'Auto-saved after generation',
+          });
+          console.log(`[Generate] Auto-saved profile snapshot for generation ${savedGeneration.id}`);
+        } catch (profileSaveError) {
+          console.error('[Generate] Failed to auto-save profile snapshot:', profileSaveError.message);
+        }
+      }
     } catch (saveError) {
       console.error('[Generate] Failed to save generation:', saveError.message);
       // Don't fail the request if saving fails - still return the generated README
