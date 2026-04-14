@@ -48,12 +48,12 @@ function FeaturesPage() {
           <div className="credit-card">
             <div className="credit-icon">🎁</div>
             <h3>30 Free Daily Credits</h3>
-            <p>Every user gets 30 credits every day, automatically reset at midnight UTC. That's 6 free profile generations daily.</p>
+            <p>Every user gets 30 credits every day, automatically reset at midnight UTC. That's 2 free profile generations daily.</p>
           </div>
           <div className="credit-card">
             <div className="credit-icon">💎</div>
-            <h3>5 Credits Per Generation</h3>
-            <p>Each profile generation costs just 5 credits. Create multiple variations until you find the perfect one.</p>
+            <h3>15 Credits Per Generation</h3>
+            <p>Each profile generation costs 15 credits. Create multiple variations until you find the perfect one.</p>
           </div>
           <div className="credit-card">
             <div className="credit-icon">⏰</div>

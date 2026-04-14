@@ -158,13 +158,13 @@ router.post('/', extractSessionUser, checkCredits, async (req, res) => {
       streakStatsUrl: prompt.match(/https:\/\/streak-stats\.demolab\.com\/\?[^"'\s)]+/)?.[0] || '',
     }, userData.profileStyle || 'professional', correctGithubUsername);
 
-    // Deduct credits (await the async function)
-    await deductCredits(userId);
+    // Deduct credits (await the async function and get remaining credits)
+    const creditsRemaining = await deductCredits(userId);
 
     res.json({
       readme: processedReadme,
       creditsUsed: CREDITS_PER_USE,
-      creditsRemaining: 0, // TODO: fetch actual remaining credits
+      creditsRemaining: creditsRemaining || 0,
       provider,
     });
   } catch (err) {
