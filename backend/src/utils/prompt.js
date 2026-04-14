@@ -91,8 +91,56 @@ function getTypingLines(style, name, role, techStack = []) {
   return shuffled.join(';');
 }
 
+function getTemplateVisualProfile(style) {
+  const profiles = {
+    professional: {
+      typing: { font: 'PT Serif', color: '2563EB', width: 620, size: 24, pause: 1200 },
+      stats: { theme: 'dark', hideBorder: 'false', cardWidth: 480 },
+      badges: { style: 'for-the-badge' },
+      visitor: { color: '2563eb', style: 'flat-square' },
+    },
+    casual: {
+      typing: { font: 'Caveat', color: 'F97316', width: 640, size: 30, pause: 900 },
+      stats: { theme: 'radical', hideBorder: 'false', cardWidth: 500 },
+      badges: { style: 'plastic' },
+      visitor: { color: 'f97316', style: 'flat' },
+    },
+    minimal: {
+      typing: { font: 'Space Mono', color: '6B7280', width: 500, size: 20, pause: 1350 },
+      stats: { theme: 'default', hideBorder: 'true', cardWidth: 430 },
+      badges: { style: 'flat-square' },
+      visitor: { color: '6b7280', style: 'flat-square' },
+    },
+    'job-ready': {
+      typing: { font: 'Roboto Slab', color: '0EA5E9', width: 560, size: 22, pause: 1000 },
+      stats: { theme: 'tokyonight', hideBorder: 'true', cardWidth: 460 },
+      badges: { style: 'flat' },
+      visitor: { color: '0ea5e9', style: 'flat-square' },
+    },
+  };
+
+  return profiles[style] || profiles.professional;
+}
+
+function getTemplateDesignSignature(style) {
+  const signatures = {
+    professional:
+      'Typography signature: editorial and executive. Keep headings in clean Title Case, avoid playful punctuation, and maintain concise, formal phrasing throughout.',
+    casual:
+      'Typography signature: expressive and friendly. Use energetic, human phrasing, playful heading wording, and warm, community-first microcopy.',
+    minimal:
+      'Typography signature: restrained and ultra-clean. Use short headings, low-noise wording, and compact sentence structure with generous whitespace.',
+    'job-ready':
+      'Typography signature: recruiter-focused and sharp. Use direct outcome-first statements, clear section labels, and no decorative fluff in body text.',
+  };
+
+  return signatures[style] || signatures.professional;
+}
+
 export function buildPrompt(userData) {
   const profileStyle = userData.profileStyle || 'professional';
+  const visualProfile = getTemplateVisualProfile(profileStyle);
+  const templateDesignSignature = getTemplateDesignSignature(profileStyle);
 
   // IMPORTANT: gh = GitHub username (for stats URLs), name = display name (for text)
   // ALWAYS use gh for ALL GitHub stats, streak, visitor count, and languages URLs
@@ -113,28 +161,22 @@ export function buildPrompt(userData) {
   // Generate unique typing SVG lines each time based on profile style and user's actual tech stack
   const typingLines = getTypingLines(profileStyle, name, userData.role, userData.techStack || []);
 
-  const typingStyleByTemplate = {
-    professional: { font: 'IBM Plex Mono', color: '2F81F7', width: 540 },
-    casual: { font: 'Fira Code', color: '6C63FF', width: 500 },
-    minimal: { font: 'JetBrains Mono', color: '9CA3AF', width: 460 },
-  };
-
-  const typingStyle = typingStyleByTemplate[profileStyle] || typingStyleByTemplate.professional;
+  const typingStyle = visualProfile.typing;
 
   // Only include typing SVG for non-job-ready profiles
   let typingSvgUrl = 'NO_TYPING_SVG';
   if (profileStyle !== 'job-ready') {
-    typingSvgUrl = `https://readme-typing-svg.demolab.com?font=${encodeURIComponent(typingStyle.font)}&size=22&pause=1000&color=${typingStyle.color}&center=true&vCenter=true&width=${typingStyle.width}&lines=${encodeURIComponent(typingLines)}`;
+    typingSvgUrl = `https://readme-typing-svg.demolab.com?font=${encodeURIComponent(typingStyle.font)}&size=${typingStyle.size}&pause=${typingStyle.pause}&color=${typingStyle.color}&center=true&vCenter=true&width=${typingStyle.width}&lines=${encodeURIComponent(typingLines)}`;
   }
 
-  const visitorBadgeUrl = `https://komarev.com/ghpvc/?username=${gh}&label=Profile+Views&color=0e75b6&style=flat-square`;
+  const visitorBadgeUrl = `https://komarev.com/ghpvc/?username=${gh}&label=Profile+Views&color=${visualProfile.visitor.color}&style=${visualProfile.visitor.style}`;
 
   // GitHub stats URLs (username is always dynamic from current user input)
-  const githubStatsUrl = `https://github-readme-stats.shion.dev/api?username=${gh}&theme=dark&hide_border=false&include_all_commits=false&count_private=false&card_width=460`;
+  const githubStatsUrl = `https://github-readme-stats.shion.dev/api?username=${gh}&theme=${visualProfile.stats.theme}&hide_border=${visualProfile.stats.hideBorder}&include_all_commits=false&count_private=false&card_width=${visualProfile.stats.cardWidth}`;
 
-  const topLangsUrl = `https://github-readme-stats.shion.dev/api/top-langs/?username=${gh}&theme=dark&hide_border=false&include_all_commits=false&count_private=false&layout=compact&card_width=460`;
+  const topLangsUrl = `https://github-readme-stats.shion.dev/api/top-langs/?username=${gh}&theme=${visualProfile.stats.theme}&hide_border=${visualProfile.stats.hideBorder}&include_all_commits=false&count_private=false&layout=compact&card_width=${visualProfile.stats.cardWidth}`;
 
-  const streakStatsUrl = `https://streak-stats.demolab.com/?user=${gh}&theme=dark&hide_border=false`;
+  const streakStatsUrl = `https://streak-stats.demolab.com/?user=${gh}&theme=${visualProfile.stats.theme}&hide_border=${visualProfile.stats.hideBorder}`;
 
   // GitHub Trophies widget
   const trophiesUrl = `https://github-profile-trophy.vercel.app/?username=${gh}&theme=tokyonight&no-frame=true&margin-w=15&margin-h=15&no-bg=true&rank=-C`;
@@ -161,6 +203,7 @@ export function buildPrompt(userData) {
     .join(' · ');
 
   // Tech stack badges - generate as HTML img tags for proper rendering
+  const badgeStyle = visualProfile.badges.style;
   const techBadgeUrls = (userData.techStack || []).map(tech => {
     const normalized = tech.toLowerCase().replace(/[.#]/g, '');
     const logos = {
@@ -213,7 +256,10 @@ export function buildPrompt(userData) {
       visualstudiocode: { logo: 'visualstudiocode', color: '007ACC', logoColor: 'white' },
     };
     const config = logos[normalized] || { logo: normalized, color: '58a6ff', logoColor: 'white' };
-    return `<img src="https://img.shields.io/badge/${tech}-${config.color}?style=for-the-badge&logo=${config.logo}&logoColor=${config.logoColor}"/>`;
+    const badgeLabel = encodeURIComponent(tech);
+    const badgeLogo = encodeURIComponent(config.logo);
+    const badgeLogoColor = encodeURIComponent(config.logoColor);
+    return `<img src="https://img.shields.io/badge/${badgeLabel}-${config.color}?style=${badgeStyle}&logo=${badgeLogo}&logoColor=${badgeLogoColor}"/>`;
   }).join('\n  ');
 
   // Load template based on profile style
@@ -245,6 +291,7 @@ export function buildPrompt(userData) {
     .replace(/\$\{trophiesUrl\}/g, trophiesUrl)
     .replace(/\$\{memesUrl\}/g, memesUrl)
     .replace(/\$\{quotesUrl\}/g, quotesUrl)
+    .replace(/\$\{templateDesignSignature\}/g, templateDesignSignature)
     .replace(/\$\{donationHtml\}/g, donationHtml || 'NO_DONATIONS');
 
   return prompt;

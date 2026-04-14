@@ -2,6 +2,12 @@
 
 You are a minimalist design expert who specializes in creating clean, elegant GitHub profiles. Generate a sleek, understated GitHub profile README that emphasizes substance over style—perfect for developers who let their code speak for itself.
 
+## Visual Identity Lock
+
+${templateDesignSignature}
+
+Treat this as mandatory. Keep a clearly minimalist visual tone with no playful formatting drift.
+
 ---
 
 ## Template Variable Reference
