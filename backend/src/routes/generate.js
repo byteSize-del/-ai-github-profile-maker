@@ -95,6 +95,49 @@ function buildStatsLayout(urls) {
   ].join('\n');
 }
 
+function normalizeSingleStatsSection(readme, urls) {
+  const statsUrlMatcher = /(github-readme-stats|streak-stats\.demolab\.com)/i;
+  const statsHeadingMatcher = /^##+\s*(?:📊\s*)?(?:GitHub\s*(?:Stats|Activity)|Stats)\s*$/im;
+  const statsSection = `## 📊 GitHub Stats\n\n${buildStatsLayout(urls)}\n`;
+  const placeholder = '__PROFILEFORGE_STATS_SECTION__';
+  let placeholderInserted = false;
+
+  const placeOnce = () => {
+    if (placeholderInserted) {
+      return '';
+    }
+    placeholderInserted = true;
+    return placeholder;
+  };
+
+  let normalized = readme;
+
+  // Replace any HTML paragraph blocks that contain stats cards.
+  normalized = normalized.replace(/<p[^>]*>[\s\S]*?<\/p>/gi, (block) => {
+    if (!statsUrlMatcher.test(block)) {
+      return block;
+    }
+    return placeOnce();
+  });
+
+  // Replace markdown image stats lines if present.
+  normalized = normalized.replace(
+    /^\s*!\[[^\]]*\]\([^\n)]*(?:github-readme-stats|streak-stats\.demolab\.com)[^\n)]*\)\s*$/gim,
+    () => placeOnce()
+  );
+
+  // Remove existing stats headings (we inject one canonical heading).
+  normalized = normalized.replace(/^##+\s*(?:📊\s*)?(?:GitHub\s*(?:Stats|Activity)|Stats)\s*$/gim, '');
+
+  if (placeholderInserted) {
+    normalized = normalized.replace(placeholder, statsSection);
+  } else if (!statsHeadingMatcher.test(normalized) && !statsUrlMatcher.test(normalized)) {
+    normalized = `${normalized.trim()}\n\n${statsSection}`;
+  }
+
+  return normalized.replace(/\n{3,}/g, '\n\n').trim();
+}
+
 // Post-process function to fix stats URLs and ensure correct GitHub username is used
 function ensureStatsRendered(readme, urls, profileStyle, correctUsername) {
   let result = readme;
@@ -196,15 +239,7 @@ function ensureStatsRendered(readme, urls, profileStyle, correctUsername) {
 
   const hasAllStatsUrls = urls.githubStatsUrl && urls.topLangsUrl && urls.streakStatsUrl;
   if (hasAllStatsUrls) {
-    // Normalize stats section sizing for GitHub README container width.
-    const statsSection = `## 📊 GitHub Stats\n\n${buildStatsLayout(urls)}\n`;
-    const statsSectionPattern = /^##+\s*(?:\d+\.\s*)?(?:📊\s*)?(?:GitHub\s*(?:Stats|Activity)|Stats)\s*$[\r\n]+[\s\S]*?(?=^##+\s|\Z)/im;
-
-    if (statsSectionPattern.test(result)) {
-      result = result.replace(statsSectionPattern, statsSection);
-    } else {
-      result = `${result.trim()}\n\n${statsSection}`;
-    }
+    result = normalizeSingleStatsSection(result, urls);
   }
 
   return result;

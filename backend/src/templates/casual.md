@@ -41,7 +41,7 @@ ${socialsText ? `Social Links:\n${socialsText}` : ''}
 - **ALL images**: Use `<img>` HTML tags, NOT markdown `![]()`
 - **Headers**: Use `<h1 align="center">` for main title
 - **Centering**: Wrap centered elements in `<p align="center">`
-- **Stats width**: Always use `width="48%"` for side-by-side layout
+- **Stats sizing**: Use one stats section only; first row `width="49%"` + `width="49%"`, second row `width="52%"`, all with `height="195"`
 - **Section breaks**: Use `---` horizontal rules between major sections
 - **Spacing**: Add empty line after images to prevent overlapping
 
@@ -141,6 +141,7 @@ Generate the README with these sections in exact order:
 - **Layout**: 
   - Row 1: Stats card + Streak card
   - Row 2: Top Languages card
+- **Rule**: Include this section once only, do not generate a second stats block later
 - **Theme**: tokyonight with `hide_border=true`
 - Add horizontal rule after
 

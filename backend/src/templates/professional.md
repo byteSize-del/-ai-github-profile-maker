@@ -47,6 +47,7 @@ These variables will be replaced by actual values:
 - `${socialsText}` = Pre-formatted social links
 
 **Critical**: Stats URLs include `username=${gh}` or `user=${gh}` already. Do NOT modify them.
+**Critical**: Include the GitHub stats section exactly once in the final README.
 
 ---
 

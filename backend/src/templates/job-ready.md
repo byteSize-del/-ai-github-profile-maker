@@ -22,6 +22,7 @@ These variables will be replaced by actual values:
 - `${socialsText}` = Pre-formatted social links
 
 **Critical**: All stats URLs are pre-built. Do NOT edit or replace `${gh}` variants.
+**Critical**: Keep a single GitHub stats section in the README. Do not duplicate stats cards.
 
 ---
 

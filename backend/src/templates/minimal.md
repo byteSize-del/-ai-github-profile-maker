@@ -61,6 +61,7 @@ Included in the side-by-side stats row above to keep dimensions aligned.
 ${techBadgeUrls}
 
 ⚠️ **Include elements exactly as shown.** Do NOT edit URLs, wrap in code blocks, or modify variable names. They must render as live images.
+⚠️ **Stats rule**: Include one GitHub stats section only. Do not repeat stats at the bottom.
 
 ## Design Style for Minimal Profile
 

@@ -113,10 +113,18 @@ export function buildPrompt(userData) {
   // Generate unique typing SVG lines each time based on profile style and user's actual tech stack
   const typingLines = getTypingLines(profileStyle, name, userData.role, userData.techStack || []);
 
+  const typingStyleByTemplate = {
+    professional: { font: 'IBM Plex Mono', color: '2F81F7', width: 540 },
+    casual: { font: 'Fira Code', color: '6C63FF', width: 500 },
+    minimal: { font: 'JetBrains Mono', color: '9CA3AF', width: 460 },
+  };
+
+  const typingStyle = typingStyleByTemplate[profileStyle] || typingStyleByTemplate.professional;
+
   // Only include typing SVG for non-job-ready profiles
   let typingSvgUrl = 'NO_TYPING_SVG';
   if (profileStyle !== 'job-ready') {
-    typingSvgUrl = `https://readme-typing-svg.demolab.com?font=Fira+Code&size=22&pause=1000&color=6C63FF&center=true&vCenter=true&width=500&lines=${encodeURIComponent(typingLines)}`;
+    typingSvgUrl = `https://readme-typing-svg.demolab.com?font=${encodeURIComponent(typingStyle.font)}&size=22&pause=1000&color=${typingStyle.color}&center=true&vCenter=true&width=${typingStyle.width}&lines=${encodeURIComponent(typingLines)}`;
   }
 
   const visitorBadgeUrl = `https://komarev.com/ghpvc/?username=${gh}&label=Profile+Views&color=0e75b6&style=flat-square`;
