@@ -40,7 +40,9 @@ function GeneratePage() {
 
   const fetchCredits = async () => {
     try {
-      const res = await fetch(`${API_URL}/api/credits/${userId}`);
+      const res = await fetch(`${API_URL}/api/credits`, {
+        credentials: 'include', // Send session cookie with request
+      });
       const data = await res.json();
       setCredits(data.credits);
       setResetAt(data.resetAt);
@@ -56,7 +58,8 @@ function GeneratePage() {
       const res = await fetch(`${API_URL}/api/generate`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ userId, userData }),
+        credentials: 'include', // Send session cookie with request
+        body: JSON.stringify({ userData }),
       });
 
       const data = await res.json();

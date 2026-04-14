@@ -1,12 +1,18 @@
 import { Router } from 'express';
-import { getCredits } from '../db/credits.js';
+import { getCredits } from '../db/supabase.js';
+import { extractSessionUser } from '../middleware/auth.js';
 
 const router = Router();
 
-router.get('/:userId', (req, res) => {
-  const { userId } = req.params;
-  const { credits, resetAt } = getCredits(userId);
-  res.json({ credits, resetAt });
+router.get('/', extractSessionUser, async (req, res) => {
+  try {
+    const userId = req.body.userId;
+    const { credits, resetAt } = await getCredits(userId);
+    res.json({ credits, resetAt });
+  } catch (error) {
+    console.error('Credits fetch error:', error.message);
+    res.status(500).json({ error: error.message });
+  }
 });
 
 export default router;
