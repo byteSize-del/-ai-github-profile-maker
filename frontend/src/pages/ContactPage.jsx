@@ -1,6 +1,7 @@
 import { useState } from 'react';
 
 const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+const CONTACT_API_URL = import.meta.env.DEV ? `${API_URL}/api/contact` : '/api/contact';
 
 function ContactPage() {
   const [formData, setFormData] = useState({
@@ -27,7 +28,7 @@ function ContactPage() {
     setSubmitSuccess('');
 
     try {
-      const response = await fetch(`${API_URL}/api/contact`, {
+      const response = await fetch(CONTACT_API_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',

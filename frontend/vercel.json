@@ -4,6 +4,7 @@
   "devCommand": "npm run dev",
   "installCommand": "npm install",
   "rewrites": [
+    { "source": "/api/contact", "destination": "https://ai-github-profile-maker.onrender.com/api/contact" },
     { "source": "/(.*)", "destination": "/index.html" }
   ],
   "headers": [
