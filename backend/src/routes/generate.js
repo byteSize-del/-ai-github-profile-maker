@@ -2,6 +2,7 @@ import { Router } from 'express';
 import { generateReadme } from '../services/provider.js';
 import { buildPrompt } from '../utils/prompt.js';
 import { checkCredits, deductCredits } from '../middleware/credits.js';
+import { extractSessionUser } from '../middleware/auth.js';
 
 const router = Router();
 const CREDITS_PER_USE = parseInt(process.env.CREDITS_PER_USE) || 5;
@@ -120,9 +121,10 @@ function ensureStatsRendered(readme, urls, profileStyle, correctUsername) {
   return result;
 }
 
-router.post('/', checkCredits, async (req, res) => {
+router.post('/', extractSessionUser, checkCredits, async (req, res) => {
   try {
     const { userData } = req.body;
+    const userId = req.body.userId;
 
     if (!userData) {
       return res.status(400).json({ error: 'Missing userData in request body' });
@@ -156,12 +158,13 @@ router.post('/', checkCredits, async (req, res) => {
       streakStatsUrl: prompt.match(/https:\/\/streak-stats\.demolab\.com\/\?[^"'\s)]+/)?.[0] || '',
     }, userData.profileStyle || 'professional', correctGithubUsername);
 
-    const creditsRemaining = deductCredits(req.body.userId);
+    // Deduct credits (await the async function)
+    await deductCredits(userId);
 
     res.json({
       readme: processedReadme,
       creditsUsed: CREDITS_PER_USE,
-      creditsRemaining,
+      creditsRemaining: 0, // TODO: fetch actual remaining credits
       provider,
     });
   } catch (err) {

@@ -154,7 +154,7 @@ export async function deductCredits(userId, generationId = null, reason = null) 
   const newCreditsAvailable = user.credits_available - CREDITS_PER_USE;
   const newCreditsUsed = user.credits_used + CREDITS_PER_USE;
 
-  const { data: updatedUser, error: updateError } = await supabaseAdmin
+  const { data: updatedUsers, error: updateError } = await supabaseAdmin
     .from('users')
     .update({
       credits_available: newCreditsAvailable,
@@ -162,12 +162,13 @@ export async function deductCredits(userId, generationId = null, reason = null) 
       total_generations: user.total_generations + 1,
     })
     .eq('id', userId)
-    .select()
-    .single();
+    .select();
 
   if (updateError) {
     throw updateError;
   }
+
+  const updatedUser = Array.isArray(updatedUsers) ? updatedUsers[0] : updatedUsers;
 
   // Log credit transaction
   const { error: logError } = await supabaseAdmin
