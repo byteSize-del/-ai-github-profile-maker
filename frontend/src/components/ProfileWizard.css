@@ -203,12 +203,13 @@
 }
 
 .social-input:focus-within {
-  border-color: var(--color-accent-primary);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12);
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
 }
 
 .social-icon {
   font-size: 1.25rem;
+  color: #111111;
 }
 
 .social-input input {
@@ -269,7 +270,7 @@
 
 .btn-next {
   background: var(--gradient-accent);
-  color: white;
+  color: #000000;
   margin-left: auto;
   box-shadow: 0 4px 15px rgba(255, 255, 255, 0.18);
 }
@@ -287,7 +288,7 @@
 .btn-generate {
   width: 100%;
   background: var(--gradient-accent);
-  color: white;
+  color: #000000;
   padding: var(--space-lg);
   font-size: 1rem;
   box-shadow: 0 4px 20px rgba(255, 255, 255, 0.24);
@@ -313,8 +314,8 @@
 .spinner {
   width: 18px;
   height: 18px;
-  border: 2px solid rgba(255, 255, 255, 0.3);
-  border-top-color: white;
+  border: 2px solid rgba(0, 0, 0, 0.2);
+  border-top-color: #000000;
   border-radius: 50%;
   animation: spin 0.6s linear infinite;
 }
@@ -354,7 +355,7 @@
 
 .btn-reset {
   background: var(--gradient-accent);
-  color: white;
+  color: #000000;
   padding: var(--space-md) var(--space-xl);
   box-shadow: 0 4px 15px rgba(255, 255, 255, 0.18);
 }
@@ -439,7 +440,7 @@
 
 .btn-autofill {
   background: var(--gradient-accent);
-  color: white;
+  color: #000000;
   border: none;
   padding: 0.625rem 1.25rem;
   border-radius: var(--radius-md);
@@ -629,13 +630,14 @@
 }
 
 .donation-input:focus-within {
-  border-color: var(--color-accent-primary);
-  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12);
+  border-color: #000000;
+  box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.12);
 }
 
 .donation-icon {
   font-size: 1.25rem;
   flex-shrink: 0;
+  color: #111111;
 }
 
 .donation-input input {

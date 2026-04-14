@@ -40,7 +40,7 @@ function FeaturesPage() {
         <article className="premium-card">
           <h3>Platform controls</h3>
           <ul className="premium-list">
-            <li>Dashboard with account and connection status.</li>
+            <li>Dashboard with account insights and credit visibility.</li>
             <li>Session-aware navigation with login/logout actions.</li>
             <li>Auth middleware enforced on protected API routes.</li>
             <li>Consistent monochrome theme across all pages.</li>
