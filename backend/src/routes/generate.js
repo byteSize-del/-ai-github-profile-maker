@@ -3,6 +3,7 @@ import { generateReadme } from '../services/provider.js';
 import { buildPrompt } from '../utils/prompt.js';
 import { checkCredits, deductCredits } from '../middleware/credits.js';
 import { extractSessionUser } from '../middleware/auth.js';
+import { saveGeneration } from '../db/supabase.js';
 
 const router = Router();
 const CREDITS_PER_USE = parseInt(process.env.CREDITS_PER_USE) || 15;
@@ -160,6 +161,23 @@ router.post('/', extractSessionUser, checkCredits, async (req, res) => {
 
     // Deduct credits (await the async function and get remaining credits)
     const creditsRemaining = await deductCredits(userId);
+
+    // Save generation to database
+    try {
+      await saveGeneration(userId, {
+        github_username: userData.githubUsername,
+        template: userData.profileStyle || 'professional',
+        input: userData, // Store the input data
+        readme: processedReadme,
+        provider: provider,
+        model: 'groq', // Default model
+        generationTime: Date.now(), // Can be improved with actual timing
+      });
+      console.log(`[Generate] Successfully saved generation for user ${userId}`);
+    } catch (saveError) {
+      console.error('[Generate] Failed to save generation:', saveError.message);
+      // Don't fail the request if saving fails - still return the generated README
+    }
 
     res.json({
       readme: processedReadme,

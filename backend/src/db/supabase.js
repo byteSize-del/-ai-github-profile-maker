@@ -199,14 +199,14 @@ export async function saveGeneration(userId, generationData) {
     throw new Error('Supabase not configured');
   }
 
-  const { data: generation, error } = await supabaseAdmin
+  const { data: generations, error } = await supabaseAdmin
     .from('generations')
     .insert([
       {
         user_id: userId,
         github_username: generationData.github_username,
         profile_template: generationData.template,
-        input_data: generationData.input,
+        input_data: typeof generationData.input === 'string' ? generationData.input : JSON.stringify(generationData.input),
         generated_readme: generationData.readme,
         credits_used: CREDITS_PER_USE,
         ai_provider: generationData.provider,
@@ -215,14 +215,14 @@ export async function saveGeneration(userId, generationData) {
         status: 'completed',
       },
     ])
-    .select()
-    .single();
+    .select();
 
   if (error) {
     throw error;
   }
 
-  return generation;
+  // Return the first inserted record
+  return Array.isArray(generations) ? generations[0] : generations;
 }
 
 /**
