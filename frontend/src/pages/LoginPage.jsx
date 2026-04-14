@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
-import './LoginPage.css';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -11,7 +10,7 @@ function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      navigate('/generate');
+      navigate('/dashboard');
     }
   }, [isAuthenticated, user, navigate]);
 
@@ -26,8 +25,8 @@ function LoginPage() {
     const state = searchParams.get('state');
     try {
       setLoginError(null);
-      await login(code, state);  // Pass state to login
-      navigate('/generate');
+      await login(code, state);
+      navigate('/dashboard');
     } catch (err) {
       setLoginError(err.message);
     }
@@ -66,13 +65,11 @@ function LoginPage() {
 
   if (loading) {
     return (
-      <div className="login-page">
-        <div className="login-container">
-          <div className="login-card">
-            <div className="login-loading">
-              <div className="spinner"></div>
-              <p>Loading...</p>
-            </div>
+      <div className="auth-page">
+        <div className="auth-card">
+          <div className="auth-main">
+            <h1>Loading account session</h1>
+            <p>Please wait while we verify your authentication state.</p>
           </div>
         </div>
       </div>
@@ -80,86 +77,42 @@ function LoginPage() {
   }
 
   return (
-    <div className="login-page">
-      <div className="login-container">
-        <div className="login-card">
-          <div className="login-header">
-            <h1>Welcome to ProfileForge</h1>
-            <p>Sign in to generate your professional GitHub profile</p>
-          </div>
+    <div className="auth-page">
+      <div className="auth-card">
+        <div className="auth-main">
+          <p className="eyebrow">Authentication</p>
+          <h1>Sign in with GitHub</h1>
+          <p>
+            Login enables your secure dashboard, credit tracking, and profile generation workflow.
+          </p>
 
-          <div className="login-content">
-            {(loginError || error) && (
-              <div className="error-message">
-                <span className="error-icon">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <path d="M12 8v4M12 16h.01" />
-                  </svg>
-                </span>
-                <div>
-                  <strong>Login Failed</strong>
-                  <p>{loginError || error}</p>
-                </div>
-              </div>
-            )}
-
-            <div className="features-preview">
-              <h3>What you'll get with a free account:</h3>
-              <ul>
-                <li>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-                  </svg>
-                  AI-powered profile generation
-                </li>
-                <li>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <rect x="3" y="3" width="18" height="18" rx="2" />
-                    <path d="M3 9h18M9 21V9" />
-                  </svg>
-                  Live preview before saving
-                </li>
-                <li>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <circle cx="12" cy="12" r="10" />
-                    <polyline points="12 6 12 12 16 14" />
-                  </svg>
-                  30 free credits daily
-                </li>
-                <li>
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-                    <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8" />
-                    <polyline points="16 6 12 2 8 6" />
-                    <line x1="12" y1="2" x2="12" y2="15" />
-                  </svg>
-                  Export to Markdown instantly
-                </li>
-              </ul>
+          {(loginError || error) && (
+            <div className="auth-error">
+              <strong>Authentication failed</strong>
+              <p>{loginError || error}</p>
             </div>
+          )}
 
-            <button
-              className="github-login-btn"
-              onClick={handleGitHubLogin}
-              disabled={loading}
-            >
-              <svg className="github-icon" viewBox="0 0 24 24" fill="currentColor">
-                <path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z" />
-              </svg>
+          <div className="cta-row">
+            <button className="button-primary" onClick={handleGitHubLogin} disabled={loading}>
               Continue with GitHub
             </button>
           </div>
 
-          <div className="login-footer">
-            <p className="privacy-note">
-              By continuing, you agree to our{' '}
-              <a href="/terms">Terms of Service</a> and{' '}
-              <a href="/privacy">Privacy Policy</a>.
-              <br />
-              We only access your public profile information.
-            </p>
-          </div>
+          <p className="plan-note">
+            By continuing you accept the Terms of Service and Privacy Policy.
+          </p>
         </div>
+
+        <aside className="auth-benefits">
+          <h3>Included in free account</h3>
+          <ul>
+            <li>Protected dashboard and session management.</li>
+            <li>30 daily credits with transparent balance display.</li>
+            <li>Wizard-based README generation and markdown export.</li>
+            <li>Provider failover for higher generation reliability.</li>
+          </ul>
+        </aside>
       </div>
     </div>
   );

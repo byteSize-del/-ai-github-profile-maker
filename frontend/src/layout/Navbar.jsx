@@ -1,9 +1,12 @@
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 import { useState, useEffect } from 'react';
+import { useAuth } from '../hooks/useAuth';
 import './Navbar.css';
 
 function Navbar() {
+  const navigate = useNavigate();
   const location = useLocation();
+  const { isAuthenticated, user, logout } = useAuth();
   const [scrolled, setScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
@@ -19,6 +22,11 @@ function Navbar() {
   useEffect(() => {
     setMobileMenuOpen(false);
   }, [location]);
+
+  const handleLogout = async () => {
+    await logout();
+    navigate('/login');
+  };
 
   const isActive = (path) => location.pathname === path;
 
@@ -38,6 +46,11 @@ function Navbar() {
           <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>
             Home
           </Link>
+          {isAuthenticated && (
+            <Link to="/dashboard" className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}>
+              Dashboard
+            </Link>
+          )}
           <Link to="/features" className={`nav-link ${isActive('/features') ? 'active' : ''}`}>
             Features
           </Link>
@@ -53,15 +66,26 @@ function Navbar() {
         </div>
 
         <div className="navbar-actions">
-          <Link to="/login" className="btn-nav-secondary">
-            Sign In
-          </Link>
-          <Link to="/generate" className="btn-nav-primary">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M13 2L3 14h9l-1 8 10-12h-9l1-8z" />
-            </svg>
-            Get Started
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <span className="user-login">{user?.github_username ? `@${user.github_username}` : 'Account'}</span>
+              <button type="button" className="btn-nav-secondary" onClick={handleLogout}>
+                Logout
+              </button>
+              <Link to="/generate" className="btn-nav-primary">
+                Generate
+              </Link>
+            </>
+          ) : (
+            <>
+              <Link to="/login" className="btn-nav-secondary">
+                Sign In
+              </Link>
+              <Link to="/login" className="btn-nav-primary">
+                Get Started
+              </Link>
+            </>
+          )}
         </div>
 
         <button
@@ -86,6 +110,11 @@ function Navbar() {
           <Link to="/" className={`nav-link ${isActive('/') ? 'active' : ''}`}>
             Home
           </Link>
+          {isAuthenticated && (
+            <Link to="/dashboard" className={`nav-link ${isActive('/dashboard') ? 'active' : ''}`}>
+              Dashboard
+            </Link>
+          )}
           <Link to="/features" className={`nav-link ${isActive('/features') ? 'active' : ''}`}>
             Features
           </Link>
@@ -98,9 +127,14 @@ function Navbar() {
           <Link to="/contact" className={`nav-link ${isActive('/contact') ? 'active' : ''}`}>
             Contact
           </Link>
-          <Link to="/generate" className="btn-nav-primary">
-            Get Started
-          </Link>
+          {isAuthenticated ? (
+            <>
+              <Link to="/generate" className="btn-nav-primary">Generate</Link>
+              <button type="button" className="btn-nav-secondary mobile-logout" onClick={handleLogout}>Logout</button>
+            </>
+          ) : (
+            <Link to="/login" className="btn-nav-primary">Get Started</Link>
+          )}
         </div>
       )}
     </nav>

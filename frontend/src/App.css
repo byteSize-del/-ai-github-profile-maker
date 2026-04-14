@@ -49,7 +49,7 @@
 .bg-shape-1 {
   width: 500px;
   height: 500px;
-  background: radial-gradient(circle, rgba(88, 166, 255, 0.3), transparent);
+  background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent);
   top: -150px;
   right: -150px;
   animation-delay: 0s;
@@ -58,7 +58,7 @@
 .bg-shape-2 {
   width: 400px;
   height: 400px;
-  background: radial-gradient(circle, rgba(31, 111, 235, 0.25), transparent);
+  background: radial-gradient(circle, rgba(220, 220, 220, 0.14), transparent);
   bottom: -100px;
   left: -100px;
   animation-delay: -7s;
@@ -67,7 +67,7 @@
 .bg-shape-3 {
   width: 300px;
   height: 300px;
-  background: radial-gradient(circle, rgba(121, 192, 255, 0.2), transparent);
+  background: radial-gradient(circle, rgba(180, 180, 180, 0.12), transparent);
   top: 40%;
   left: 30%;
   animation-delay: -14s;

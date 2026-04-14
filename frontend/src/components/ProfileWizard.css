@@ -122,7 +122,7 @@
 }
 
 .error-message::before {
-  content: '⚠ ';
+  content: '! ';
 }
 
 /* Tags */
@@ -141,8 +141,8 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-xs);
-  background: rgba(139, 92, 246, 0.15);
-  border: 1px solid rgba(139, 92, 246, 0.3);
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.18);
   padding: 0.5rem 0.75rem;
   border-radius: var(--radius-md);
   font-size: 0.875rem;
@@ -204,7 +204,7 @@
 
 .social-input:focus-within {
   border-color: var(--color-accent-primary);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12);
 }
 
 .social-icon {
@@ -271,12 +271,12 @@
   background: var(--gradient-accent);
   color: white;
   margin-left: auto;
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.18);
 }
 
 .btn-next:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.24);
 }
 
 .btn-next:disabled {
@@ -290,12 +290,12 @@
   color: white;
   padding: var(--space-lg);
   font-size: 1rem;
-  box-shadow: 0 4px 20px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 4px 20px rgba(255, 255, 255, 0.24);
 }
 
 .btn-generate:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 8px 30px rgba(139, 92, 246, 0.5);
+  box-shadow: 0 8px 30px rgba(255, 255, 255, 0.3);
 }
 
 .btn-generate:disabled {
@@ -356,12 +356,12 @@
   background: var(--gradient-accent);
   color: white;
   padding: var(--space-md) var(--space-xl);
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.18);
 }
 
 .btn-reset:hover {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.24);
 }
 
 /* Profile Style Selector */
@@ -396,14 +396,14 @@
 
 .style-card:hover {
   background: var(--color-bg-hover);
-  border-color: rgba(139, 92, 246, 0.4);
+  border-color: rgba(255, 255, 255, 0.24);
   transform: translateY(-2px);
 }
 
 .style-card.selected {
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   border-color: var(--color-accent-primary);
-  box-shadow: 0 0 30px rgba(139, 92, 246, 0.2);
+  box-shadow: 0 0 30px rgba(255, 255, 255, 0.14);
 }
 
 .style-icon {
@@ -450,12 +450,12 @@
   display: flex;
   align-items: center;
   gap: var(--space-sm);
-  box-shadow: 0 4px 15px rgba(139, 92, 246, 0.3);
+  box-shadow: 0 4px 15px rgba(255, 255, 255, 0.18);
 }
 
 .btn-autofill:hover:not(:disabled) {
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(139, 92, 246, 0.4);
+  box-shadow: 0 6px 20px rgba(255, 255, 255, 0.24);
 }
 
 .btn-autofill:disabled {
@@ -507,7 +507,7 @@
 }
 
 .suggestion-btn:hover {
-  background: rgba(139, 92, 246, 0.1);
+  background: rgba(255, 255, 255, 0.08);
   border-color: var(--color-accent-primary);
   color: var(--color-text-primary);
 }
@@ -630,7 +630,7 @@
 
 .donation-input:focus-within {
   border-color: var(--color-accent-primary);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.15);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.12);
 }
 
 .donation-icon {
@@ -650,3 +650,4 @@
 .donation-input input::placeholder {
   color: var(--color-text-muted);
 }
+

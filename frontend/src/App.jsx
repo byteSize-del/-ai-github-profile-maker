@@ -9,8 +9,13 @@ import FeaturesPage from './pages/FeaturesPage';
 import PricingPage from './pages/PricingPage';
 import ContactPage from './pages/ContactPage';
 import GeneratePage from './pages/GeneratePage';
+import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
+import PrivacyPage from './pages/PrivacyPage';
+import TermsPage from './pages/TermsPage';
+import NotFoundPage from './pages/NotFoundPage';
 import './App.css';
+import './styles/premium.css';
 
 function App() {
   return (
@@ -27,6 +32,14 @@ function App() {
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/login" element={<LoginPage />} />
               <Route
+                path="/dashboard"
+                element={
+                  <ProtectedRoute>
+                    <DashboardPage />
+                  </ProtectedRoute>
+                }
+              />
+              <Route
                 path="/generate"
                 element={
                   <ProtectedRoute>
@@ -34,6 +47,9 @@ function App() {
                   </ProtectedRoute>
                 }
               />
+              <Route path="/privacy" element={<PrivacyPage />} />
+              <Route path="/terms" element={<TermsPage />} />
+              <Route path="*" element={<NotFoundPage />} />
             </Routes>
           </main>
           <Footer />

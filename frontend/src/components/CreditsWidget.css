@@ -72,15 +72,15 @@
 }
 
 .credits-fill.high {
-  background: var(--gradient-accent);
+  background: linear-gradient(90deg, #ffffff, #d5d5d5);
 }
 
 .credits-fill.medium {
-  background: linear-gradient(90deg, var(--color-warning), #fbbf24);
+  background: linear-gradient(90deg, #bdbdbd, #8f8f8f);
 }
 
 .credits-fill.low {
-  background: linear-gradient(90deg, var(--color-error), #f87171);
+  background: linear-gradient(90deg, #7c7c7c, #5c5c5c);
 }
 
 .credits-footer {

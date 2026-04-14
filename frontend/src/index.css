@@ -1,7 +1,8 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Newsreader:opsz,wght@6..72,500;6..72,700&display=swap');
+
 /* ============================================
-   PROFILEFORGE - Premium Professional Design System
-   Inspired by Linear, Raycast, VS Code
-   ============================================ */
+  PROFILEFORGE - Premium Monochrome System
+  ============================================ */
 
 /* CSS Reset & Base */
 *, *::before, *::after {
@@ -11,43 +12,38 @@
 }
 
 :root {
-  /* Core Colors - Deep Slate Theme (Professional, muted, sophisticated) */
-  --color-bg-primary: #0d1117;
-  --color-bg-secondary: #161b22;
-  --color-bg-tertiary: #1c2128;
-  --color-bg-elevated: #21262d;
-  --color-bg-hover: #30363d;
+  --color-bg-primary: #050505;
+  --color-bg-secondary: #0d0d0e;
+  --color-bg-tertiary: #161617;
+  --color-bg-elevated: #1b1b1d;
+  --color-bg-hover: #242427;
 
-  --color-text-primary: #e6edf3;
-  --color-text-secondary: #8b949e;
-  --color-text-tertiary: #6e7681;
-  --color-text-muted: #484f58;
+  --color-text-primary: #f2f2f2;
+  --color-text-secondary: #cccccc;
+  --color-text-tertiary: #9d9d9d;
+  --color-text-muted: #6f6f6f;
 
-  --color-border: #30363d;
-  --color-border-subtle: #21262d;
-  --color-border-hover: #484f58;
+  --color-border: #2b2b2f;
+  --color-border-subtle: #202024;
+  --color-border-hover: #424248;
 
-  /* Accent Colors - Refined Blue (GitHub-inspired professional blue) */
-  --color-accent-primary: #58a6ff;
-  --color-accent-secondary: #79c0ff;
-  --color-accent-tertiary: #a5d6ff;
-  --color-accent-muted: #1f6feb;
+  --color-accent-primary: #f2f2f2;
+  --color-accent-secondary: #d8d8d8;
+  --color-accent-tertiary: #ffffff;
+  --color-accent-muted: #bcbcbc;
 
-  /* Status Colors */
-  --color-success: #3fb950;
-  --color-warning: #d29922;
-  --color-error: #f85149;
-  --color-info: #58a6ff;
+  --color-success: #8f8f8f;
+  --color-warning: #9f9f9f;
+  --color-error: #d86f6f;
+  --color-info: #c0c0c0;
 
-  /* Gradients */
-  --gradient-accent: linear-gradient(135deg, #58a6ff 0%, #1f6feb 100%);
-  --gradient-surface: linear-gradient(180deg, #161b22 0%, #0d1117 100%);
-  --gradient-glow: radial-gradient(ellipse at center, rgba(88, 166, 255, 0.08) 0%, transparent 70%);
+  --gradient-accent: linear-gradient(135deg, #ffffff 0%, #cfcfcf 100%);
+  --gradient-surface: linear-gradient(180deg, #111112 0%, #050505 100%);
+  --gradient-glow: radial-gradient(ellipse at center, rgba(255, 255, 255, 0.07) 0%, transparent 70%);
 
-  /* Typography */
-  --font-display: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
-  --font-body: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
-  --font-mono: 'SF Mono', 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  --font-display: 'Newsreader', serif;
+  --font-body: 'Manrope', 'Segoe UI', sans-serif;
+  --font-mono: 'JetBrains Mono', 'SF Mono', 'Cascadia Code', monospace;
 
   /* Spacing */
   --space-xs: 0.25rem;
@@ -71,7 +67,7 @@
   --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.5);
   --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.6);
   --shadow-xl: 0 20px 25px -5px rgba(0, 0, 0, 0.6);
-  --shadow-glow: 0 0 30px rgba(88, 166, 255, 0.15);
+  --shadow-glow: 0 0 30px rgba(255, 255, 255, 0.12);
 
   /* Transitions */
   --transition-fast: 150ms ease;
@@ -188,14 +184,14 @@ a:hover {
 
 .btn-primary {
   background: var(--gradient-accent);
-  color: white;
-  box-shadow: var(--shadow-md), 0 0 0 1px rgba(139, 92, 246, 0.1);
+  color: #000;
+  box-shadow: var(--shadow-md), 0 0 0 1px rgba(255, 255, 255, 0.25);
 }
 
 .btn-primary:hover:not(:disabled) {
   transform: translateY(-1px);
-  box-shadow: var(--shadow-lg), 0 0 20px rgba(139, 92, 246, 0.3);
-  color: white;
+  box-shadow: var(--shadow-lg), 0 0 20px rgba(255, 255, 255, 0.25);
+  color: #000;
 }
 
 .btn-secondary {
@@ -254,7 +250,7 @@ input::placeholder, textarea::placeholder {
 input:focus, textarea:focus, select:focus {
   outline: none;
   border-color: var(--color-accent-primary);
-  box-shadow: 0 0 0 3px rgba(139, 92, 246, 0.1);
+  box-shadow: 0 0 0 3px rgba(255, 255, 255, 0.15);
 }
 
 /* Utility Classes */

@@ -11,10 +11,10 @@ const fieldSchemas = {
 };
 
 const PROFILE_STYLES = [
-  { id: 'professional', label: 'Professional', icon: '💼', description: 'Clean, corporate-ready profile perfect for job hunting and recruiters' },
-  { id: 'job-ready', label: 'Job-Ready', icon: '🎯', description: 'Interview-optimized with metrics, achievements, and clear availability status' },
-  { id: 'casual', label: 'Casual & Fun', icon: '🎮', description: 'Friendly, personality-driven profile that builds genuine community connections' },
-  { id: 'minimal', label: 'Minimal', icon: '✨', description: 'Clean, elegant design that lets your code and projects speak for themselves' },
+  { id: 'professional', label: 'Professional', icon: 'P', description: 'Clean, corporate-ready profile for hiring and portfolio review' },
+  { id: 'job-ready', label: 'Job-Ready', icon: 'J', description: 'Interview-oriented profile with clear results and measurable outcomes' },
+  { id: 'casual', label: 'Community', icon: 'C', description: 'Approachable profile with balanced tone and practical project context' },
+  { id: 'minimal', label: 'Minimal', icon: 'M', description: 'Editorial layout with concise sections and restrained visual density' },
 ];
 
 const STEPS = [
@@ -26,7 +26,7 @@ const STEPS = [
   { id: 'techStack', label: 'What technologies do you use?', type: 'tags', placeholder: 'Type and press Enter', defaultValues: ['JavaScript', 'React', 'Node.js'] },
   { id: 'projects', label: 'What projects are you working on?', type: 'tags', placeholder: 'Type and press Enter', defaultValues: ['Project Alpha', 'Open Source App'] },
   { id: 'socials', label: 'Add your social links (optional)', type: 'socials' },
-  { id: 'widgets', label: 'Add fun widgets to your profile', type: 'widgets' },
+  { id: 'widgets', label: 'Add optional widgets to your profile', type: 'widgets' },
   { id: 'donations', label: 'Add donation links (optional)', type: 'donations' },
 ];
 
@@ -384,10 +384,10 @@ function ProfileWizard({ onSubmit, loading, wizardComplete, onReset }) {
         {step.type === 'socials' && (
           <div className="wizard-socials">
             {[
-              { key: 'twitter', label: 'Twitter / X', icon: '🐦' },
-              { key: 'linkedin', label: 'LinkedIn', icon: '💼' },
-              { key: 'portfolio', label: 'Portfolio', icon: '🌐' },
-              { key: 'email', label: 'Email', icon: '📧' },
+              { key: 'twitter', label: 'Twitter / X', icon: 'TW' },
+              { key: 'linkedin', label: 'LinkedIn', icon: 'IN' },
+              { key: 'portfolio', label: 'Portfolio', icon: 'WEB' },
+              { key: 'email', label: 'Email', icon: 'MAIL' },
             ].map(({ key, label, icon }) => (
               <div key={key} className="social-input">
                 <span className="social-icon">{icon}</span>
@@ -415,7 +415,7 @@ function ProfileWizard({ onSubmit, loading, wizardComplete, onReset }) {
                 onChange={(e) => setWidgetSelections({ ...widgetSelections, trophies: e.target.checked })}
               />
               <div className="widget-info">
-                <span className="widget-icon">🏆</span>
+                <span className="widget-icon">TR</span>
                 <div>
                   <strong>GitHub Trophies</strong>
                   <p>Showcase your GitHub achievements and badges</p>
@@ -430,7 +430,7 @@ function ProfileWizard({ onSubmit, loading, wizardComplete, onReset }) {
                 onChange={(e) => setWidgetSelections({ ...widgetSelections, memes: e.target.checked })}
               />
               <div className="widget-info">
-                <span className="widget-icon">😎</span>
+                <span className="widget-icon">RM</span>
                 <div>
                   <strong>Random Memes</strong>
                   <p>Add fun programming memes that refresh daily</p>
@@ -445,7 +445,7 @@ function ProfileWizard({ onSubmit, loading, wizardComplete, onReset }) {
                 onChange={(e) => setWidgetSelections({ ...widgetSelections, quotes: e.target.checked })}
               />
               <div className="widget-info">
-                <span className="widget-icon">💭</span>
+                <span className="widget-icon">QT</span>
                 <div>
                   <strong>Inspirational Quotes</strong>
                   <p>Display rotating tech and programming quotes</p>
@@ -460,10 +460,10 @@ function ProfileWizard({ onSubmit, loading, wizardComplete, onReset }) {
           <div className="wizard-donations">
             <p className="donations-hint">Let people support you through donations (optional)</p>
             {[
-              { key: 'github', label: 'GitHub Sponsors', icon: '💚' },
-              { key: 'patreon', label: 'Patreon', icon: '🎨' },
-              { key: 'buymeacoffee', label: 'Buy Me a Coffee', icon: '☕' },
-              { key: 'paypal', label: 'PayPal', icon: '💳' },
+              { key: 'github', label: 'GitHub Sponsors', icon: 'GH' },
+              { key: 'patreon', label: 'Patreon', icon: 'PT' },
+              { key: 'buymeacoffee', label: 'Buy Me a Coffee', icon: 'BC' },
+              { key: 'paypal', label: 'PayPal', icon: 'PP' },
             ].map(({ key, label, icon }) => (
               <div key={key} className="donation-input">
                 <span className="donation-icon">{icon}</span>

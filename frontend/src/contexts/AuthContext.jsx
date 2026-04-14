@@ -6,6 +6,7 @@ export function AuthProvider({ children }) {
   const [user, setUser] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
 
   // Check if user is already logged in on mount
   useEffect(() => {
@@ -15,13 +16,11 @@ export function AuthProvider({ children }) {
   const checkAuthStatus = useCallback(async () => {
     try {
       setLoading(true);
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
-      console.log('Checking auth status with URL:', apiUrl);
+      setError(null);
       const response = await fetch(`${apiUrl}/api/auth/me`, {
         credentials: 'include',
       });
 
-      console.log('Auth check response:', response.status);
       if (response.ok) {
         const userData = await response.json();
         setUser(userData);
@@ -29,31 +28,26 @@ export function AuthProvider({ children }) {
         setUser(null);
       }
     } catch (err) {
-      console.error('Auth check failed:', err);
-      console.error('Error details:', {
-        message: err.message,
-        stack: err.stack,
-      });
+      setError(err.message || 'Unable to verify session');
       setUser(null);
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [apiUrl]);
 
   const login = useCallback(async (code, state) => {
     try {
       setLoading(true);
       setError(null);
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
       const response = await fetch(`${apiUrl}/api/auth/callback`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',  // Send oauth_state cookie
-        body: JSON.stringify({ code, state }),  // Include state for CSRF validation
+        credentials: 'include',
+        body: JSON.stringify({ code, state }),
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
+        const errorData = await response.json().catch(() => ({}));
         throw new Error(errorData.error || 'Login failed');
       }
 
@@ -66,23 +60,23 @@ export function AuthProvider({ children }) {
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [apiUrl]);
 
   const logout = useCallback(async () => {
     try {
       setLoading(true);
-      const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
+      setError(null);
       await fetch(`${apiUrl}/api/auth/logout`, {
         method: 'POST',
         credentials: 'include',
       });
       setUser(null);
     } catch (err) {
-      console.error('Logout failed:', err);
+      setError(err.message || 'Logout failed');
     } finally {
       setLoading(false);
     }
-  }, []);
+  }, [apiUrl]);
 
   const value = {
     user,
@@ -90,6 +84,7 @@ export function AuthProvider({ children }) {
     error,
     login,
     logout,
+    refreshAuth: checkAuthStatus,
     isAuthenticated: !!user,
   };
 
