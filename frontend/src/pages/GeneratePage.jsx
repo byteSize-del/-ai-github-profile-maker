@@ -135,9 +135,7 @@ function GeneratePage() {
         </header>
 
         {/* Credits Widget */}
-        {userId && (
-          <CreditsWidget credits={credits} resetAt={resetAt} />
-        )}
+        <CreditsWidget credits={credits} resetAt={resetAt} />
 
         {/* Main Content */}
         <main className="app-main">
