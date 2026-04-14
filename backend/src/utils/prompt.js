@@ -121,13 +121,12 @@ export function buildPrompt(userData) {
 
   const visitorBadgeUrl = `https://komarev.com/ghpvc/?username=${gh}&label=Profile+Views&color=0e75b6&style=flat-square`;
 
-  // Use the most reliable GitHub stats endpoints
-  // Note: These free services occasionally go down for maintenance
-  const githubStatsUrl = `https://github-readme-stats.vercel.app/api?username=${gh}&show_icons=true&theme=tokyonight&hide_border=true&count_private=true`;
+  // GitHub stats URLs (username is always dynamic from current user input)
+  const githubStatsUrl = `https://github-readme-stats.shion.dev/api?username=${gh}&theme=dark&hide_border=false&include_all_commits=false&count_private=false`;
 
-  const topLangsUrl = `https://github-readme-stats.vercel.app/api/top-langs/?username=${gh}&layout=compact&theme=tokyonight&hide_border=true&count_private=true`;
+  const topLangsUrl = `https://github-readme-stats.shion.dev/api/top-langs/?username=${gh}&theme=dark&hide_border=false&include_all_commits=false&count_private=false&layout=compact`;
 
-  const streakStatsUrl = `https://streak-stats.demolab.com/?user=${gh}&theme=tokyonight&hide_border=true`;
+  const streakStatsUrl = `https://streak-stats.demolab.com/?user=${gh}&theme=dark&hide_border=false`;
 
   // GitHub Trophies widget
   const trophiesUrl = `https://github-profile-trophy.vercel.app/?username=${gh}&theme=tokyonight&no-frame=true&margin-w=15&margin-h=15&no-bg=true&rank=-C`;

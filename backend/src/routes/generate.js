@@ -94,6 +94,8 @@ function ensureStatsRendered(readme, urls, profileStyle, correctUsername) {
     // Fix github-readme-stats URLs (works in both markdown and HTML src attributes)
     // Pattern matches: username=AnythingUntilQuoteOrAmpersand (catches all variations)
     const statsPatterns = [
+      { regex: /(github-readme-stats\.shion\.dev\/api\?)username=[^"&\s]+/gi, replacement: `$1username=${correctUsername}` },
+      { regex: /(github-readme-stats\.shion\.dev\/api\/top-langs\/\?)username=[^"&\s]+/gi, replacement: `$1username=${correctUsername}` },
       { regex: /(github-readme-stats\.vercel\.app\/api\?)username=[^"&\s]+/gi, replacement: `$1username=${correctUsername}` },
       { regex: /(github-readme-stats\.vercel\.app\/api\/top-langs\/\?)username=[^"&\s]+/gi, replacement: `$1username=${correctUsername}` },
       { regex: /(streak-stats\.demolab\.com\/\?)user=[^"&\s]+/gi, replacement: `$1user=${correctUsername}` },
@@ -236,8 +238,8 @@ router.post('/', extractSessionUser, checkCredits, async (req, res) => {
     const processedReadme = ensureStatsRendered(result, {
       typingSvgUrl: prompt.match(/https:\/\/readme-typing-svg\.demolab\.com\/\?[^"'\s)]+/)?.[0] || '',
       visitorBadgeUrl: prompt.match(/https:\/\/komarev\.com\/ghpvc\/\?[^"'\s)]+/)?.[0] || '',
-      githubStatsUrl: prompt.match(/https:\/\/github-readme-stats\.vercel\.app\/api\?[^"'\s)]+/)?.[0] || '',
-      topLangsUrl: prompt.match(/https:\/\/github-readme-stats\.vercel\.app\/api\/top-langs\/\?[^"'\s)]+/)?.[0] || '',
+      githubStatsUrl: prompt.match(/https:\/\/github-readme-stats\.(?:shion\.dev|vercel\.app)\/api\?[^"'\s)]+/)?.[0] || '',
+      topLangsUrl: prompt.match(/https:\/\/github-readme-stats\.(?:shion\.dev|vercel\.app)\/api\/top-langs\/\?[^"'\s)]+/)?.[0] || '',
       streakStatsUrl: prompt.match(/https:\/\/streak-stats\.demolab\.com\/\?[^"'\s)]+/)?.[0] || '',
     }, userData.profileStyle || 'professional', correctGithubUsername);
 

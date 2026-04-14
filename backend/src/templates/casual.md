@@ -72,12 +72,12 @@ ${socialsText ? `Social Links:\n${socialsText}` : ''}
 ### 3. GitHub Stats (Side-by-Side)
 ```html
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api?username=${gh}&show_icons=true&theme=tokyonight&hide_border=true&count_private=true" width="48%" alt="GitHub Stats" />
-  <img src="https://streak-stats.demolab.com/?user=${gh}&theme=tokyonight&hide_border=true" width="48%" alt="GitHub Streak" />
+  <img src="https://github-readme-stats.shion.dev/api?username=${gh}&theme=dark&hide_border=false&include_all_commits=false&count_private=false" width="48%" alt="GitHub Stats" />
+  <img src="https://streak-stats.demolab.com/?user=${gh}&theme=dark&hide_border=false" width="48%" alt="GitHub Streak" />
 </p>
 
 <p align="center">
-  <img src="https://github-readme-stats.vercel.app/api/top-langs/?username=${gh}&layout=compact&theme=tokyonight&hide_border=true" width="48%" alt="Top Languages" />
+  <img src="https://github-readme-stats.shion.dev/api/top-langs/?username=${gh}&theme=dark&hide_border=false&include_all_commits=false&count_private=false&layout=compact" width="48%" alt="Top Languages" />
 </p>
 ```
 
