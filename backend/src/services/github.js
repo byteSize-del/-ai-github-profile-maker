@@ -1,4 +1,5 @@
 import { supabaseAdmin } from '../utils/supabase.js';
+import { v4 as uuidv4 } from 'uuid';
 
 const GITHUB_CLIENT_ID = process.env.GITHUB_CLIENT_ID;
 const GITHUB_CLIENT_SECRET = process.env.GITHUB_CLIENT_SECRET;
@@ -73,20 +74,19 @@ export async function getOrCreateSupabaseUser(gitHubUserData) {
     throw new Error('Supabase not configured');
   }
 
-  const userId = `github_${gitHubUserData.id}`;
-  
-  // Try to get existing user
+  // Use github_username as lookup key instead of id
   const { data: existingUser } = await supabaseAdmin
     .from('users')
     .select('*')
-    .eq('id', userId)
+    .eq('github_username', gitHubUserData.login)
     .single();
 
   if (existingUser) {
     return existingUser;
   }
 
-  // Create new user
+  // Create new user with a proper UUID
+  const userId = uuidv4();
   const { data: newUser, error } = await supabaseAdmin
     .from('users')
     .insert([
