@@ -75,6 +75,10 @@ app.use(express.json({
 }));
 app.use(cookieParser(process.env.COOKIE_SECRET || 'default-secret'));
 
+// SECURITY: Trust reverse proxy (Render/Vercel passes via X-Forwarded-For)
+// This allows rate limiting and other middleware to correctly identify clients
+app.set('trust proxy', 1);
+
 // Rate limiting
 app.use(limiter);
 
