@@ -82,6 +82,19 @@ function sanitizeInput(input) {
   return input;
 }
 
+function buildStatsLayout(urls) {
+  return [
+    '<p align="center">',
+    `  <img src="${urls.githubStatsUrl}" width="49%" height="195" alt="GitHub Stats" />`,
+    `  <img src="${urls.streakStatsUrl}" width="49%" height="195" alt="GitHub Streak" />`,
+    '</p>',
+    '',
+    '<p align="center">',
+    `  <img src="${urls.topLangsUrl}" width="52%" height="195" alt="Top Languages" />`,
+    '</p>',
+  ].join('\n');
+}
+
 // Post-process function to fix stats URLs and ensure correct GitHub username is used
 function ensureStatsRendered(readme, urls, profileStyle, correctUsername) {
   let result = readme;
@@ -181,18 +194,17 @@ function ensureStatsRendered(readme, urls, profileStyle, correctUsername) {
     result = result.replace(pattern, replacement);
   });
 
-  // If stats are completely missing, inject them based on profile style
-  if (!result.includes('github-readme-stats') && profileStyle !== 'job-ready') {
-    result = result.replace(/\n##? Stats\n/, `\n## Stats\n\n![GitHub Stats](${urls.githubStatsUrl})\n\n![Top Languages](${urls.topLangsUrl})\n`);
-  }
-  
-  if (!result.includes('streak-stats.demolab.com') && profileStyle !== 'job-ready') {
-    result = result.replace(/\n##? Stats\n/, `\n## Stats\n\n![GitHub Streak](${urls.streakStatsUrl})\n`);
-  }
-  
-  // For job-ready style (no typing SVG), inject stats with proper formatting
-  if (!result.includes('github-readme-stats') && profileStyle === 'job-ready') {
-    result = result.replace(/\n##? Stats\n/, `\n## Stats\n\n![GitHub Stats](${urls.githubStatsUrl})\n\n![Top Languages](${urls.topLangsUrl})\n`);
+  const hasAllStatsUrls = urls.githubStatsUrl && urls.topLangsUrl && urls.streakStatsUrl;
+  if (hasAllStatsUrls) {
+    // Normalize stats section sizing for GitHub README container width.
+    const statsSection = `## 📊 GitHub Stats\n\n${buildStatsLayout(urls)}\n`;
+    const statsSectionPattern = /^##+\s*(?:\d+\.\s*)?(?:📊\s*)?(?:GitHub\s*(?:Stats|Activity)|Stats)\s*$[\r\n]+[\s\S]*?(?=^##+\s|\Z)/im;
+
+    if (statsSectionPattern.test(result)) {
+      result = result.replace(statsSectionPattern, statsSection);
+    } else {
+      result = `${result.trim()}\n\n${statsSection}`;
+    }
   }
 
   return result;

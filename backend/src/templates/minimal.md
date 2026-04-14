@@ -45,12 +45,17 @@ Include these ready-to-use elements verbatim in your output. Do NOT modify URLs.
 </p>
 
 ### 3. GitHub Stats Cards
-![GitHub Stats](${githubStatsUrl})
+<p align="center">
+   <img src="${githubStatsUrl}" width="49%" height="195" alt="GitHub Stats" />
+   <img src="${streakStatsUrl}" width="49%" height="195" alt="GitHub Streak" />
+</p>
 
-![Top Languages](${topLangsUrl})
+<p align="center">
+   <img src="${topLangsUrl}" width="52%" height="195" alt="Top Languages" />
+</p>
 
 ### 4. Streak Stats
-![GitHub Streak](${streakStatsUrl})
+Included in the side-by-side stats row above to keep dimensions aligned.
 
 ### 5. Tech Stack Badges
 ${techBadgeUrls}

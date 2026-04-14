@@ -95,11 +95,14 @@ ${socialsText ? `Social Links:\n${socialsText}` : ''}
 
 ### 3. GitHub Stats
 ```markdown
-![GitHub Stats](${githubStatsUrl})
+<p align="center">
+  <img src="${githubStatsUrl}" width="49%" height="195" alt="GitHub Stats" />
+  <img src="${streakStatsUrl}" width="49%" height="195" alt="GitHub Streak" />
+</p>
 
-![Top Languages](${topLangsUrl})
-
-![GitHub Streak](${streakStatsUrl})
+<p align="center">
+  <img src="${topLangsUrl}" width="52%" height="195" alt="Top Languages" />
+</p>
 ```
 
 ---

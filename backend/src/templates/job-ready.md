@@ -77,12 +77,12 @@ ${techBadgeUrls}
 ## 📊 GitHub Activity
 
 <p align="center">
-  <img src="${githubStatsUrl}" width="48%" alt="GitHub Stats" />
-  <img src="${streakStatsUrl}" width="48%" alt="GitHub Streak" />
+  <img src="${githubStatsUrl}" width="49%" height="195" alt="GitHub Stats" />
+  <img src="${streakStatsUrl}" width="49%" height="195" alt="GitHub Streak" />
 </p>
 
 <p align="center">
-  <img src="${topLangsUrl}" width="48%" alt="Top Languages" />
+  <img src="${topLangsUrl}" width="52%" height="195" alt="Top Languages" />
 </p>
 ```
 

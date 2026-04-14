@@ -122,9 +122,9 @@ export function buildPrompt(userData) {
   const visitorBadgeUrl = `https://komarev.com/ghpvc/?username=${gh}&label=Profile+Views&color=0e75b6&style=flat-square`;
 
   // GitHub stats URLs (username is always dynamic from current user input)
-  const githubStatsUrl = `https://github-readme-stats.shion.dev/api?username=${gh}&theme=dark&hide_border=false&include_all_commits=false&count_private=false`;
+  const githubStatsUrl = `https://github-readme-stats.shion.dev/api?username=${gh}&theme=dark&hide_border=false&include_all_commits=false&count_private=false&card_width=460`;
 
-  const topLangsUrl = `https://github-readme-stats.shion.dev/api/top-langs/?username=${gh}&theme=dark&hide_border=false&include_all_commits=false&count_private=false&layout=compact`;
+  const topLangsUrl = `https://github-readme-stats.shion.dev/api/top-langs/?username=${gh}&theme=dark&hide_border=false&include_all_commits=false&count_private=false&layout=compact&card_width=460`;
 
   const streakStatsUrl = `https://streak-stats.demolab.com/?user=${gh}&theme=dark&hide_border=false`;
 
