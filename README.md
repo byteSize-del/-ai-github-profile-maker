@@ -1,209 +1,85 @@
 # AI GitHub Profile Maker
 
-A fullstack app that generates stunning GitHub profile READMEs using AI (Groq, OpenRouter, NVIDIA NIM), with **GitHub OAuth authentication**, **50 credits/day per user** system, and **Supabase database** for production.
+AI GitHub Profile Maker is a full-stack application that generates polished GitHub profile README files from a username and profile preferences.
 
-## Features
+## Highlights
 
-- 🔐 **GitHub OAuth Login** - Sign in with your GitHub account
-- 🤖 Multi-provider AI support (Groq, OpenRouter, NVIDIA NIM)
-- 🪙 Daily credit system (50 credits/user/day)
-- 📊 Supabase database with user profiles, generation history, and analytics
-- 🎨 Sleek React frontend with protected routes
-- 📋 Copy & download generated READMEs
-- ⚡ Provider fallback logic
-- 🔐 Row-level security for multi-tenant safety
+- AI-assisted GitHub profile README generation
+- GitHub OAuth sign-in
+- Usage credits and generation history
+- Save, copy, and download workflows
+- Contact form with backend persistence
+- Production-ready frontend and backend deployment flow
+
+## Tech Stack
+
+- Frontend: React + Vite
+- Backend: Node.js + Express
+- Database: Supabase
+- Auth: GitHub OAuth
 
 ## Quick Start
 
 ### Prerequisites
-- Node.js 16+
-- GitHub OAuth App (get credentials [here](#github-oauth-setup))
-- Supabase project (optional, uses in-memory fallback)
 
-### 1️⃣ Backend Setup (3 min)
+- Node.js 16+
+- A GitHub OAuth App
+- A Supabase project
+
+### 1. Start the Backend
+
 ```bash
 cd backend
 cp .env.example .env
-# Add your GitHub OAuth credentials and AI provider keys
 npm install
 npm run dev
 ```
 
-### 2️⃣ Frontend Setup (2 min)
+### 2. Start the Frontend
+
 ```bash
 cd frontend
 cp .env.example .env
-# Add your GitHub OAuth Client ID
 npm install
 npm run dev
 ```
 
-**→ Open http://localhost:5173** and click "Sign in with GitHub"
+Open http://localhost:5173 to use the app.
 
-## Authentication
+## Configuration
 
-### GitHub OAuth Flow
-1. Users click "Sign in with GitHub"
-2. Redirected to GitHub for authorization
-3. GitHub redirects back with authorization code
-4. Backend exchanges code for user info
-5. User account created in Supabase (if new)
-6. Session established, user logged in
+Environment values are loaded from local env files.
 
-**[→ Full OAuth Setup Guide →](./GITHUB_OAUTH_SETUP.md)**
+- Backend config: backend/.env
+- Frontend config: frontend/.env
 
-## Project Structure
+Use the included .env.example files as templates. Do not commit real secrets.
 
-```
+## Security Best Practices
+
+- Store credentials only in environment variables
+- Keep secret values out of source control and pull requests
+- Rotate credentials periodically
+- Restrict production CORS and callback URLs to trusted domains
+- Enforce HTTPS in production
+
+## Repository Structure
+
+```text
 ai-github-profile-maker/
-├── backend/                  # Node.js + Express API
-│   ├── src/
-│   │   ├── routes/
-│   │   │   ├── auth.js      # GitHub OAuth endpoints
-│   │   │   ├── generate.js  # README generation
-│   │   │   └── credits.js   # Credit management
-│   │   ├── services/
-│   │   │   └── github.js    # GitHub OAuth service
-│   │   ├── middleware/
-│   │   ├── db/
-│   │   └── utils/
-│   ├── .env.example
-│   └── package.json
-├── frontend/                 # React + Vite
-│   ├── src/
-│   │   ├── contexts/
-│   │   │   └── AuthContext.jsx
-│   │   ├── hooks/
-│   │   │   └── useAuth.js
-│   │   ├── components/
-│   │   │   └── ProtectedRoute.jsx
-│   │   ├── pages/
-│   │   │   ├── LoginPage.jsx
-│   │   │   └── GeneratePage.jsx
-│   │   └── App.jsx
-│   ├── .env.example
-│   └── package.json
-├── GITHUB_OAUTH_SETUP.md     # OAuth configuration guide
-├── SUPABASE_QUICKSTART.md    # 5-minute setup ⚡
-├── SUPABASE_SETUP.md         # Full documentation
-└── README.md
+	backend/
+	frontend/
+	GITHUB_OAUTH_SETUP.md
+	SUPABASE_QUICKSTART.md
+	SUPABASE_SETUP.md
+	README.md
 ```
 
-## Environment Variables
+## Documentation
 
-### Backend (`backend/.env`)
-```env
-# GitHub OAuth (required)
-GITHUB_CLIENT_ID=your_github_client_id
-GITHUB_CLIENT_SECRET=your_github_client_secret
-
-# Session
-JWT_SECRET=your_jwt_secret
-
-# Provider fallback order
-AI_PROVIDER_ORDER=groq,openrouter,nvidia
-
-# AI Providers (supports key pools)
-GROQ_API_KEY_1=your_groq_key_1
-GROQ_API_KEY_2=your_groq_key_2
-GROQ_API_KEY_3=your_groq_key_3
-GROQ_API_KEY_4=your_groq_key_4
-
-OPENROUTER_API_KEY_1=your_openrouter_key_1
-OPENROUTER_API_KEY_2=your_openrouter_key_2
-OPENROUTER_API_KEY_3=your_openrouter_key_3
-OPENROUTER_API_KEY_4=your_openrouter_key_4
-
-NVIDIA_API_KEY_1=your_nvidia_key_1
-NVIDIA_API_KEY_2=your_nvidia_key_2
-NVIDIA_API_KEY_3=your_nvidia_key_3
-NVIDIA_API_KEY_4=your_nvidia_key_4
-
-# Supabase (optional, falls back to in-memory)
-SUPABASE_URL=https://your-project.supabase.co
-SUPABASE_SERVICE_KEY=your_service_key
-
-# Optional alternate key formats
-# GROQ_API_KEYS=key_a,key_b,key_c
-# OPENROUTER_API_KEYS=key_a,key_b,key_c
-# NVIDIA_API_KEYS=key_a,key_b,key_c
-
-# Optional model fallbacks (free reasoning models first)
-GROQ_MODEL_CANDIDATES=openai/gpt-oss-120b,openai/gpt-oss-20b,qwen/qwen3-32b
-OPENROUTER_MODEL_CANDIDATES=google/gemma-4-31b-it:free,google/gemma-4-26b-a4b-it:free,google/gemma-3-27b-it:free
-NVIDIA_MODEL_CANDIDATES=minimaxai/minimax-m2.5,mistralai/mistral-small-4-119b-2603,moonshotai/kimi-k2-instruct
-
-# Other
-PORT=4000
-FRONTEND_URL=http://localhost:5173
-NODE_ENV=development
-```
-
-### Frontend (`frontend/.env`)
-```env
-REACT_APP_GITHUB_CLIENT_ID=your_github_client_id
-REACT_APP_API_URL=http://localhost:4000
-REACT_APP_ENV=development
-```
-
-## AI Providers
-
-| Provider | Status | Speed | Free Tier |
-|----------|--------|-------|-----------|
-| Groq | ✅ Primary | ⚡ Fastest | Yes |
-| OpenRouter | ✅ Fallback | Normal | Yes |
-| NVIDIA NIM | ✅ Fallback | Normal | Yes |
-
-Provider keys are pooled per provider and tried with round-robin rotation plus automatic failover.
-
-## Database
-
-### Supabase (Production)
-- ✅ **users** table - User accounts with daily credits
-- ✅ **generations** table - All generated READMEs with metadata
-- ✅ **credits_history** table - Audit log of transactions
-- ✅ **saved_profiles** table - Bookmarked generations
-- ✅ **RLS policies** - Users can only see their own data
-
-**[→ See full database schema →](./SUPABASE_SETUP.md#database-schema-overview)**
-
-## Authentication API
-
-### POST /api/auth/callback
-Exchange GitHub code for session
-
-### GET /api/auth/me
-Get current authenticated user
-
-### POST /api/auth/logout
-Clear session
-
-**[→ Full API Docs →](./GITHUB_OAUTH_SETUP.md#api-endpoints)**
-
-## Security
-
-- 🔒 GitHub OAuth (no passwords stored)
-- 🔒 httpOnly cookies (XSS protection)
-- 🔒 CSRF prevention (SameSite cookies)
-- 🔒 Row-level security in Supabase
-- 🔒 Rate limiting on API endpoints
-
-## Deployment
-
-| Component | Recommended | Alternative |
-|-----------|-------------|-------------|
-| Backend API | Railway, Render.com, Fly.io | Vercel |
-| Frontend | Vercel, Netlify | GitHub Pages |
-| Database | Supabase (managed PostgreSQL) | Self-hosted PG |
-| Auth | GitHub OAuth | Auth0, Clerk |
-
-### Important for Production
-1. Update GitHub OAuth redirect URIs to production domain
-2. Set `NODE_ENV=production` in backend
-3. Use HTTPS everywhere
-4. Update `FRONTEND_URL` to production domain
-5. Upgrade session store (Redis/PostgreSQL)
-6. Enable CORS properly for production domain
+- OAuth setup: ./GITHUB_OAUTH_SETUP.md
+- Supabase quick start: ./SUPABASE_QUICKSTART.md
+- Supabase full setup: ./SUPABASE_SETUP.md
 
 ## License
 
