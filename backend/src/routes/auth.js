@@ -30,8 +30,8 @@ router.post('/callback', async (req, res) => {
     // Set httpOnly cookie with session data (in production, use a proper session store)
     res.cookie('session', JSON.stringify(sessionData), {
       httpOnly: true,
-      secure: process.env.NODE_ENV === 'production',
-      sameSite: 'lax',
+      secure: true, // Always use HTTPS in production for cross-domain cookies
+      sameSite: 'none', // Allow cross-domain cookie transmission
       maxAge: 30 * 24 * 60 * 60 * 1000, // 30 days
     });
 
