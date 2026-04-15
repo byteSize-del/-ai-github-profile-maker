@@ -69,7 +69,7 @@ function ContactPage() {
       <section className="page-section premium-grid-3">
         <article className="premium-card">
           <h3>Email</h3>
-          <p>support@profileforge.dev</p>
+          <p>sahil.dev.me@gmail.com</p>
         </article>
         <article className="premium-card">
           <h3>Issue tracking</h3>
