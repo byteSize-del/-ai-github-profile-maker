@@ -23,7 +23,7 @@ function FeaturesPage() {
         </article>
         <article className="premium-card">
           <h3>Provider fallback</h3>
-          <p>Automatic model routing across Groq, OpenRouter, and NVIDIA pipelines.</p>
+          <p>Automatic model routing across Groq, Antrophic, Openai, Minimax, OpenRouter, and NVIDIA pipelines.</p>
         </article>
       </section>
 
