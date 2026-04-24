@@ -22,7 +22,7 @@
   --color-text-tertiary: #6e6e6e;
   --color-text-muted: #a0a0a0;
   
-  --color-border: #2d2d2d;
+  --color-border: #262626;
   --color-border-subtle: #e5e0d8;
   --color-border-hover: #2d5da1;
   
@@ -57,6 +57,9 @@
   --shadow-hard: 4px 4px 0px 0px #2d2d2d;
   --shadow-hard-lg: 8px 8px 0px 0px #2d2d2d;
   --shadow-hard-sm: 2px 2px 0px 0px #2d2d2d;
+  
+  /* Border Width */
+  --border-width: 4px;
   
   /* Transitions */
   --transition-fast: 100ms ease;
