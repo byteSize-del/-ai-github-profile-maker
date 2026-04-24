@@ -1,5 +1,5 @@
 /* ============================================
-   APP LAYOUT - Professional Design System
+   APP LAYOUT - Hand-Drawn System
    ============================================ */
 
 .app-layout {
@@ -15,7 +15,7 @@
 }
 
 /* ============================================
-   GENERATE PAGE - Professional Design
+   GENERATE PAGE - Hand-Drawn Design
    ============================================ */
 
 .generate-page {
@@ -26,7 +26,7 @@
   background: var(--color-bg-primary);
 }
 
-/* Subtle Background */
+/* Simple paper-like background instead of gradients */
 .bg-gradient {
   position: fixed;
   top: 0;
@@ -39,50 +39,37 @@
 
 .bg-shape {
   position: absolute;
-  border-radius: 50%;
-  filter: blur(100px);
-  opacity: 0.15;
-  animation: float 20s ease-in-out infinite;
+  border: 3px solid var(--color-border);
+  opacity: 0.1;
+  animation: float 10s ease-in-out infinite;
   pointer-events: none;
+  border-radius: var(--radius-wobbly-md);
 }
 
 .bg-shape-1 {
-  width: 500px;
-  height: 500px;
-  background: radial-gradient(circle, rgba(255, 255, 255, 0.18), transparent);
-  top: -150px;
-  right: -150px;
-  animation-delay: 0s;
+  width: 300px;
+  height: 300px;
+  top: -100px;
+  right: -100px;
+  rotate: 15deg;
 }
 
 .bg-shape-2 {
-  width: 400px;
-  height: 400px;
-  background: radial-gradient(circle, rgba(220, 220, 220, 0.14), transparent);
-  bottom: -100px;
-  left: -100px;
-  animation-delay: -7s;
-}
-
-.bg-shape-3 {
-  width: 300px;
-  height: 300px;
-  background: radial-gradient(circle, rgba(180, 180, 180, 0.12), transparent);
-  top: 40%;
-  left: 30%;
-  animation-delay: -14s;
+  width: 200px;
+  height: 200px;
+  bottom: -50px;
+  left: -50px;
+  rotate: -10deg;
 }
 
 @keyframes float {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(20px, -30px) scale(1.05); }
-  50% { transform: translate(-15px, 15px) scale(0.95); }
-  75% { transform: translate(30px, 20px) scale(1.02); }
+  0%, 100% { transform: translate(0, 0) rotate(0deg); }
+  50% { transform: translate(10px, -20px) rotate(2deg); }
 }
 
 /* Content */
 .app-content {
-  max-width: 1400px;
+  max-width: 1024px;
   margin: 0 auto;
   position: relative;
   z-index: 1;
@@ -98,14 +85,15 @@
   display: inline-flex;
   align-items: center;
   gap: var(--space-sm);
-  background: var(--color-bg-secondary);
-  border: 1px solid var(--color-border);
+  background: var(--color-bg-tertiary);
+  border: 3px solid var(--color-border);
   padding: 0.5rem 1rem;
-  border-radius: var(--radius-full);
-  font-size: 0.8125rem;
+  border-radius: var(--radius-wobbly);
+  font-size: 0.9rem;
   font-weight: 500;
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
   margin-bottom: var(--space-md);
+  box-shadow: var(--shadow-hard-sm);
 }
 
 .header-badge svg {
@@ -119,7 +107,6 @@
   font-weight: 700;
   color: var(--color-text-primary);
   margin-bottom: var(--space-sm);
-  letter-spacing: -0.02em;
 }
 
 .header-sub {
@@ -164,12 +151,13 @@
   display: flex;
   align-items: center;
   gap: var(--space-md);
-  background: rgba(248, 81, 73, 0.1);
-  border: 1px solid rgba(248, 81, 73, 0.3);
+  background: var(--color-bg-accent);
+  border: 3px solid var(--color-border);
   padding: var(--space-md) var(--space-lg);
-  border-radius: var(--radius-lg);
+  border-radius: var(--radius-wobbly-md);
   margin-bottom: var(--space-lg);
   animation: slideUp 0.3s ease-out;
+  box-shadow: var(--shadow-hard-sm);
 }
 
 .error-icon {
@@ -180,14 +168,14 @@
 
 .error-text {
   flex: 1;
-  color: var(--color-error);
+  color: var(--color-text-primary);
   font-size: 0.9375rem;
 }
 
 .error-close {
   background: transparent;
   border: none;
-  color: var(--color-text-tertiary);
+  color: var(--color-text-primary);
   font-size: 1.5rem;
   cursor: pointer;
   padding: 0 var(--space-sm);
@@ -196,7 +184,7 @@
 }
 
 .error-close:hover {
-  color: var(--color-text-primary);
+  color: var(--color-accent-primary);
 }
 
 /* Footer */
@@ -204,7 +192,7 @@
   text-align: center;
   margin-top: var(--space-3xl);
   padding-top: var(--space-xl);
-  border-top: 1px solid var(--color-border);
+  border-top: 3px dashed var(--color-border);
   color: var(--color-text-muted);
   font-size: 0.8125rem;
 }
