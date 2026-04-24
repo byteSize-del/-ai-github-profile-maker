@@ -4,6 +4,10 @@ import { createSessionToken, extractSessionUser } from '../middleware/auth.js';
 
 const router = Router();
 const isProduction = process.env.NODE_ENV === 'production';
+
+// SECURITY: Auth routes require authentication rate limiting
+router.use(authLimiter);
+
 const authCookieOptions = {
   httpOnly: true,
   secure: isProduction,
@@ -47,13 +51,16 @@ router.post('/callback', async (req, res) => {
     // Validate OAuth state for CSRF protection
     const storedState = req.cookies?.oauth_state;
     if (!storedState) {
+      console.warn('OAuth state not found in cookies - possible CSRF attempt');
       return res.status(400).json({ error: 'Invalid OAuth session' });
     }
 
     try {
       validateOAuthState(state, storedState);
     } catch (error) {
-      return res.status(400).json({ error: error.message });
+      console.error('OAuth state validation failed:', error.message);
+      // Don't expose internal error details
+      return res.status(400).json({ error: 'Invalid request - session mismatch' });
     }
 
     // Clear the used state token
@@ -85,7 +92,8 @@ router.post('/callback', async (req, res) => {
     });
   } catch (error) {
     console.error('GitHub OAuth error:', error);
-    res.status(500).json({ error: error.message || 'Authentication failed' });
+    // Don't expose internal error details to client
+    res.status(500).json({ error: 'Authentication failed. Please try again.' });
   }
 });
 

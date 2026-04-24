@@ -8,7 +8,7 @@ import creditsRouter from './routes/credits.js';
 import authRouter from './routes/auth.js';
 import contactRouter from './routes/contact.js';
 import { getProviderPoolSummary } from './services/provider.js';
-import { limiter } from './middleware/rateLimit.js';
+import { limiter, authLimiter } from './middleware/rateLimit.js';
 
 const app = express();
 
@@ -74,22 +74,58 @@ app.use(helmet({
       styleSrc: ["'self'", "'unsafe-inline'"],
       imgSrc: ["'self'", "https:", "data:"],
       connectSrc: ["'self'"],
+      fontSrc: ["'self'"],
+      objectSrc: ["'none'"],
+      mediaSrc: ["'self'"],
+      frameSrc: ["'none'"],
     },
   },
   frameguard: { action: 'deny' },
   noSniff: true,
   xssFilter: true,
+  referrerPolicy: { policy: 'strict-origin-when-cross-origin' },
 }));
+
+// SECURITY: Add additional headers not provided by helmet
+app.use((req, res, next) => {
+  // Enforce HTTPS in production
+  if (process.env.NODE_ENV === 'production') {
+    res.setHeader('Strict-Transport-Security', 'max-age=31536000; includeSubDomains; preload');
+  }
+  // Prevent MIME type sniffing
+  res.setHeader('X-Content-Type-Options', 'nosniff');
+  // Disable browser XSS protection (Helmet handles this better)
+  res.setHeader('X-XSS-Protection', '1; mode=block');
+  // Restrict permissions
+  res.setHeader('Permissions-Policy', 'geolocation=(), microphone=(), camera=()');
+  next();
+});
 
 app.use(cors(corsOptions));
 
 // Preflight handling
 app.options('*', cors(corsOptions));
 
+// SECURITY: Apply size limits to ALL parsers to prevent DoS
 app.use(express.json({
   limit: '10kb',  // Reject requests larger than 10KB to prevent DoS
 }));
-app.use(cookieParser(process.env.COOKIE_SECRET || 'default-secret'));
+app.use(express.urlencoded({
+  limit: '10kb',
+  extended: false,
+}));
+app.use(express.raw({ limit: '10kb' }));
+app.use(express.text({ limit: '10kb' }));
+
+// SECURITY: Require strong COOKIE_SECRET - never use default
+const COOKIE_SECRET = process.env.COOKIE_SECRET;
+if (!COOKIE_SECRET || COOKIE_SECRET.length < 32) {
+  console.error('🔴 CRITICAL SECURITY ERROR: COOKIE_SECRET must be set to a strong secret (32+ characters)');
+  console.error('Please set COOKIE_SECRET environment variable with a cryptographically secure random string');
+  process.exit(1);
+}
+
+app.use(cookieParser(COOKIE_SECRET));
 
 // SECURITY: Trust reverse proxy (Render/Vercel passes via X-Forwarded-For)
 // This allows rate limiting and other middleware to correctly identify clients

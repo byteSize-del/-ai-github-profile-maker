@@ -4,6 +4,7 @@ import { generateReadme } from '../services/provider.js';
 import { buildPrompt } from '../utils/prompt.js';
 import { checkCredits, deductCredits } from '../middleware/credits.js';
 import { extractSessionUser } from '../middleware/auth.js';
+import { generateLimiter } from '../middleware/rateLimit.js';
 import { saveGeneration, saveProfileSnapshot } from '../db/supabase.js';
 
 const router = Router();
@@ -245,7 +246,7 @@ function ensureStatsRendered(readme, urls, profileStyle, correctUsername) {
   return result;
 }
 
-router.post('/', extractSessionUser, checkCredits, async (req, res) => {
+router.post('/', generateLimiter, extractSessionUser, checkCredits, async (req, res) => {
   try {
     // SECURITY: Validate request body against schema
     const { error, value: validatedData } = userDataSchema.validate(req.body.userData, {

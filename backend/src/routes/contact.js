@@ -2,14 +2,49 @@ import { Router } from 'express';
 import Joi from 'joi';
 import { saveContactMessage } from '../db/supabase.js';
 import { extractSessionUserIfPresent } from '../middleware/auth.js';
+import { publicLimiter } from '../middleware/rateLimit.js';
 
 const router = Router();
 
 const contactSchema = Joi.object({
-  name: Joi.string().trim().min(1).max(100).required(),
-  email: Joi.string().trim().email({ tlds: { allow: false } }).max(254).required(),
-  subject: Joi.string().trim().min(1).max(120).required(),
-  message: Joi.string().trim().min(1).max(5000).required(),
+  name: Joi.string()
+    .trim()
+    .min(1)
+    .max(100)
+    .pattern(/^[a-zA-Z\s\-']+$/)  // SECURITY: Only allow letters, spaces, hyphens, apostrophes
+    .required()
+    .messages({
+      'string.pattern.base': 'Name contains invalid characters',
+      'any.required': 'Name is required',
+    }),
+  email: Joi.string()
+    .trim()
+    .email({ tlds: { allow: true } })  // SECURITY: Enforce TLD validation
+    .max(254)
+    .required()
+    .messages({
+      'string.email': 'Invalid email address',
+      'any.required': 'Email is required',
+    }),
+  subject: Joi.string()
+    .trim()
+    .min(1)
+    .max(120)
+    .pattern(/^[a-zA-Z0-9\s\-:.!?&]+$/)  // SECURITY: Allow only safe characters
+    .required()
+    .messages({
+      'string.pattern.base': 'Subject contains invalid characters',
+      'any.required': 'Subject is required',
+    }),
+  message: Joi.string()
+    .trim()
+    .min(10)  // SECURITY: Prevent spam with empty/short messages
+    .max(5000)
+    .required()
+    .messages({
+      'string.min': 'Message must be at least 10 characters',
+      'any.required': 'Message is required',
+    }),
 }).required();
 
 function sanitizeText(input) {
@@ -25,7 +60,7 @@ function sanitizeText(input) {
     .trim();
 }
 
-router.post('/', extractSessionUserIfPresent, async (req, res) => {
+router.post('/', publicLimiter, extractSessionUserIfPresent, async (req, res) => {
   try {
     const { error, value } = contactSchema.validate(req.body, {
       abortEarly: false,
