@@ -126,7 +126,7 @@ export async function getOrCreateSupabaseUser(gitHubUserData) {
         id: userId,
         github_username: gitHubUserData.login,
         email: gitHubUserData.email,
-        credits_available: 50,
+        credits_available: 30,
         credits_used: 0,
         total_generations: 0,
       },
