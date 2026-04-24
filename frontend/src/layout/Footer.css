@@ -1,16 +1,16 @@
 /* ============================================================
-   FOOTER - PREMIUM MONOCHROME
+   FOOTER - Hand-Drawn System
    ============================================================ */
 
 .footer {
   margin-top: auto;
-  background: #080808;
-  border-top: 1px solid var(--color-border);
+  background: var(--color-bg-primary);
+  border-top: 3px dashed var(--color-border);
   padding: 2.5rem 1rem 1.4rem;
 }
 
 .footer-container {
-  max-width: 1180px;
+  max-width: 1024px;
   margin: 0 auto;
   display: grid;
   grid-template-columns: 1.5fr repeat(3, minmax(0, 1fr));
@@ -34,14 +34,16 @@
 .footer-logo-image {
   width: 28px;
   height: 28px;
-  border-radius: 8px;
+  border-radius: var(--radius-wobbly);
+  border: 2px solid var(--color-border);
 }
 
 .footer-description {
   margin-top: 0.5rem;
   color: var(--color-text-secondary);
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   max-width: 34ch;
+  font-family: var(--font-body);
 }
 
 .footer-section h4 {
@@ -50,6 +52,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   margin-bottom: 0.6rem;
+  font-family: var(--font-display);
 }
 
 .footer-links {
@@ -58,20 +61,22 @@
 }
 
 .footer-links a {
-  color: var(--color-text-secondary);
+  color: var(--color-text-primary);
   text-decoration: none;
-  font-size: 0.88rem;
+  font-size: 0.9rem;
   transition: color var(--transition-fast);
+  font-family: var(--font-body);
 }
 
 .footer-links a:hover {
-  color: var(--color-text-primary);
+  color: var(--color-accent-primary);
+  text-decoration: underline;
 }
 
 .footer-bottom {
-  max-width: 1180px;
+  max-width: 1024px;
   margin: 0 auto;
-  border-top: 1px solid var(--color-border);
+  border-top: 3px dashed var(--color-border);
   padding-top: 0.9rem;
   display: flex;
   justify-content: space-between;
@@ -81,7 +86,8 @@
 
 .footer-copyright {
   font-size: 0.8rem;
-  color: var(--color-text-tertiary);
+  color: var(--color-text-primary);
+  font-family: var(--font-body);
 }
 
 .footer-legal {
@@ -90,13 +96,14 @@
 }
 
 .footer-legal a {
-  color: var(--color-text-tertiary);
+  color: var(--color-text-primary);
   font-size: 0.8rem;
   text-decoration: none;
+  font-family: var(--font-body);
 }
 
 .footer-legal a:hover {
-  color: var(--color-text-primary);
+  color: var(--color-accent-primary);
 }
 
 @media (max-width: 980px) {
