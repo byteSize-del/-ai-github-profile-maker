@@ -242,8 +242,9 @@ router.post('/callback/google', authLimiter, validateInput(oauthCallbackSchema),
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     });
 
-    // Check if profile needs completion (e.g., no name set or empty name)
-    const needsProfileCompletion = !supabaseUser.name || supabaseUser.name === 'Google User' || supabaseUser.name.trim().length === 0;
+    // For new Google users, always ask for profile completion
+    // This ensures unique names and better user experience
+    const needsProfileCompletion = supabaseUser.is_new_user === true;
 
     // Return minimal user data (don't expose token in response)
     return res.json({
@@ -335,8 +336,8 @@ router.get('/me', extractSessionUser, (req, res) => {
       return res.status(401).json({ error: 'Not authenticated' });
     }
 
-    // Check if profile needs completion for Google users
-    const needsProfileCompletion = user.provider === 'google' && (!user.name || user.name === 'Google User' || user.name.trim().length === 0);
+    // Check if profile needs completion for Google users (no name set yet)
+    const needsProfileCompletion = user.provider === 'google' && (!user.name || user.name.trim().length === 0);
 
     return res.json({
       id: user.id,

@@ -273,10 +273,12 @@ export async function getOrCreateSupabaseUser(googleUserData) {
 
     if (error) throw error;
     // Ensure provider field is present for JWT token
+    // Mark as existing user (not new)
     return {
       ...updatedUser,
       provider: 'google',
-      github_username: null // Explicitly set for JWT compatibility
+      github_username: null, // Explicitly set for JWT compatibility
+      is_new_user: false,
     };
   }
 
@@ -306,9 +308,11 @@ export async function getOrCreateSupabaseUser(googleUserData) {
   }
 
   // Ensure provider field is present for JWT token
+  // Mark as new user so frontend can show profile completion
   return {
     ...newUser,
     provider: 'google',
-    github_username: null // Explicitly set for JWT compatibility
+    github_username: null, // Explicitly set for JWT compatibility
+    is_new_user: true,
   };
 }
