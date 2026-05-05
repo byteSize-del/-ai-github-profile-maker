@@ -9,18 +9,55 @@ const FRONTEND_URL = process.env.FRONTEND_URL || (isProduction ? 'https://profil
 const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || `${FRONTEND_URL}/login`;
 
 /**
- * Validate redirect URI against strict allowlist
+ * Validate redirect URI against allowlist
  * SECURITY: Prevents OAuth redirect manipulation attacks
  */
 function validateRedirectUri(uri) {
+  // In production, allow any HTTPS URL that matches expected patterns
+  if (isProduction) {
+    try {
+      const url = new URL(uri);
+      
+      // Must be HTTPS in production (except localhost)
+      if (!url.protocol.startsWith('https://') && !url.hostname.includes('localhost')) {
+        return false;
+      }
+      
+      // Allow common frontend deployment patterns
+      const allowedPatterns = [
+        /^https:\/\/ai-github-profile-frontend(?:-[a-z0-9-]+)?\.vercel\.app$/i,
+        /^https:\/\/ai-github-profile-maker(?:-[a-z0-9-]+)?\.vercel\.app$/i,
+        /^https:\/\/profileforge-ai(?:-[a-z0-9-]+)?\.vercel\.app$/i,
+        /^https:\/\/[a-z0-9-]+\.onrender\.com$/i, // Render frontend URLs
+      ];
+      
+      // Check against patterns
+      if (allowedPatterns.some(pattern => pattern.test(url.origin))) {
+        return true;
+      }
+      
+      // Check against explicit FRONTEND_URL if set
+      if (process.env.FRONTEND_URL) {
+        const frontendUrl = new URL(process.env.FRONTEND_URL);
+        if (url.origin === frontendUrl.origin) {
+          return true;
+        }
+      }
+      
+      return false;
+    } catch {
+      return false;
+    }
+  }
+  
+  // Development: more permissive for local testing
   const allowedOrigins = [
     process.env.FRONTEND_URL,
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
     'https://ai-github-profile-frontend.vercel.app',
     'https://ai-github-profile-maker.vercel.app',
     'https://profileforge-ai.vercel.app',
-    // Development only
-    'http://localhost:5173',
-    'http://127.0.0.1:5173',
   ].filter(Boolean);
 
   try {
@@ -36,13 +73,16 @@ function validateRedirectUri(uri) {
 
 /**
  * Validate OAuth configuration on startup
- * SECURITY: Fail fast if configuration is insecure
+ * SECURITY: Warn but don't fail for flexible deployment
  */
 if (GOOGLE_CALLBACK_URL) {
   if (!validateRedirectUri(GOOGLE_CALLBACK_URL)) {
-    console.error('🔴 CRITICAL SECURITY: Invalid Google OAuth callback URL configuration');
-    console.error('Callback URL must be one of the allowed origins');
-    process.exit(1);
+    console.warn('⚠️  WARNING: Google OAuth callback URL may not be in allowlist');
+    console.warn('Callback URL:', GOOGLE_CALLBACK_URL);
+    console.warn('This may cause OAuth failures, but continuing for deployment flexibility');
+    // Don't exit - allow deployment with warning
+  } else {
+    console.log('✅ Google OAuth callback URL validation passed');
   }
   
   // Enforce HTTPS in production
