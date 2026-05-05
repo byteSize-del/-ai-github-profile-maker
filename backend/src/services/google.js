@@ -9,6 +9,24 @@ const FRONTEND_URL = process.env.FRONTEND_URL || (isProduction ? 'https://profil
 const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || `${FRONTEND_URL}/login`;
 
 /**
+ * Validate Google OAuth configuration on startup
+ * SECURITY: Check for required credentials
+ */
+if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+  console.warn('⚠️  WARNING: Google OAuth credentials not configured');
+  console.warn('GOOGLE_CLIENT_ID:', GOOGLE_CLIENT_ID ? '✅ Set' : '❌ Missing');
+  console.warn('GOOGLE_CLIENT_SECRET:', GOOGLE_CLIENT_SECRET ? '✅ Set' : '❌ Missing');
+  console.warn('Google login will not be available until these are configured');
+} else {
+  console.log('✅ Google OAuth credentials configured');
+}
+
+console.log('🔗 Google OAuth Configuration:');
+console.log('  - Frontend URL:', FRONTEND_URL);
+console.log('  - Callback URL:', GOOGLE_CALLBACK_URL);
+console.log('  - Environment:', isProduction ? 'Production' : 'Development');
+
+/**
  * Validate redirect URI against allowlist
  * SECURITY: Prevents OAuth redirect manipulation attacks
  */
@@ -118,6 +136,11 @@ export function validateOAuthState(providedState, storedState) {
  * Get Google OAuth authorization URL
  */
 export function getGoogleAuthUrl(state) {
+  // Check if Google OAuth is configured
+  if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
+    throw new Error('Google OAuth is not configured. Please contact administrator.');
+  }
+  
   // Validate redirect URI before use
   if (!validateRedirectUri(GOOGLE_CALLBACK_URL)) {
     throw new Error('Invalid redirect URI configuration');
@@ -141,7 +164,7 @@ export function getGoogleAuthUrl(state) {
  */
 export async function exchangeGoogleCode(code) {
   if (!GOOGLE_CLIENT_ID || !GOOGLE_CLIENT_SECRET) {
-    throw new Error('Google OAuth credentials not configured');
+    throw new Error('Google OAuth is not configured. Please contact administrator.');
   }
 
   if (!code) {

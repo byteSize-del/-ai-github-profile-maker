@@ -96,9 +96,19 @@ router.get('/google/url', oauthStateLimiter, (req, res) => {
     });
 
     const authUrl = getGoogleAuthUrl(state);
+    
     res.json({ url: authUrl });
   } catch (error) {
-    console.error('Google OAuth URL generation error:', error);
+    console.error('Google OAuth URL generation error:', error.message);
+    
+    // Provide specific error messages for configuration issues
+    if (error.message.includes('not configured')) {
+      return res.status(503).json({ 
+        error: 'Google OAuth is not available',
+        message: 'Google login is currently disabled. Please use GitHub login or contact support.'
+      });
+    }
+    
     res.status(500).json({ error: 'Failed to generate Google OAuth URL' });
   }
 });
