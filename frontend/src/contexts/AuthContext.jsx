@@ -68,6 +68,41 @@ export function AuthProvider({ children }) {
     }
   }, [apiUrl]);
 
+  const updateProfile = useCallback(async (name) => {
+    try {
+      setLoading(true);
+      setError(null);
+
+      const response = await fetch(`${apiUrl}/api/auth/profile`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ name }),
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error || 'Profile update failed');
+      }
+
+      const updatedUser = await response.json();
+      
+      // Update user in context with new name and clear needs_profile_completion
+      setUser(prev => ({
+        ...prev,
+        ...updatedUser,
+        needs_profile_completion: false,
+      }));
+
+      return updatedUser;
+    } catch (err) {
+      setError(err.message);
+      throw err;
+    } finally {
+      setLoading(false);
+    }
+  }, [apiUrl]);
+
   const logout = useCallback(async () => {
     try {
       setLoading(true);
@@ -90,8 +125,10 @@ export function AuthProvider({ children }) {
     error,
     login,
     logout,
+    updateProfile,
     refreshAuth: checkAuthStatus,
     isAuthenticated: !!user,
+    needsProfileCompletion: user?.needs_profile_completion || false,
   };
 
   return <AuthContext.Provider value={value}>{children}</AuthContext.Provider>;

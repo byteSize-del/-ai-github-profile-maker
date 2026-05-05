@@ -11,7 +11,12 @@ function LoginPage() {
 
   useEffect(() => {
     if (isAuthenticated && user) {
-      navigate('/dashboard');
+      // Check if profile needs completion
+      if (user?.needs_profile_completion) {
+        navigate('/complete-profile');
+      } else {
+        navigate('/dashboard');
+      }
     }
   }, [isAuthenticated, user, navigate]);
 
@@ -47,8 +52,13 @@ function LoginPage() {
     const state = searchParams.get('state');
     try {
       setLoginError(null);
-      await login(code, state, 'google');
-      navigate('/dashboard');
+      const userData = await login(code, state, 'google');
+      // Check if profile needs completion (Google OAuth with missing name)
+      if (userData?.needs_profile_completion) {
+        navigate('/complete-profile');
+      } else {
+        navigate('/dashboard');
+      }
     } catch (err) {
       setLoginError(err.message);
     }

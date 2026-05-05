@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import Joi from 'joi';
+import { supabaseAdmin } from '../utils/supabase.js';
 import { exchangeGitHubCode, getGitHubUserInfo, getOrCreateSupabaseUser as getOrCreateGitHubUser, generateOAuthState as generateGitHubState, validateOAuthState as validateGitHubState } from '../services/github.js';
 import { exchangeGoogleCode, getGoogleUserInfo, getOrCreateSupabaseUser as getOrCreateGoogleUser, generateOAuthState as generateGoogleState, validateOAuthState as validateGoogleState, getGoogleAuthUrl } from '../services/google.js';
 import { createSessionToken, extractSessionUser } from '../middleware/auth.js';
@@ -241,6 +242,9 @@ router.post('/callback/google', authLimiter, validateInput(oauthCallbackSchema),
       maxAge: 24 * 60 * 60 * 1000, // 24 hours
     });
 
+    // Check if profile needs completion (e.g., no name set or empty name)
+    const needsProfileCompletion = !supabaseUser.name || supabaseUser.name === 'Google User' || supabaseUser.name.trim().length === 0;
+
     // Return minimal user data (don't expose token in response)
     return res.json({
       id: supabaseUser.id,
@@ -248,6 +252,7 @@ router.post('/callback/google', authLimiter, validateInput(oauthCallbackSchema),
       name: supabaseUser.name,
       github_username: supabaseUser.github_username || null,
       provider: supabaseUser.provider || 'google',
+      needs_profile_completion: needsProfileCompletion,
     });
   } catch (error) {
     console.error('Google OAuth error:', error.message || error);
@@ -268,6 +273,59 @@ router.post('/callback/google', authLimiter, validateInput(oauthCallbackSchema),
  * GET /api/auth/me
  * Get current user info (requires valid JWT session)
  */
+/**
+ * PUT /api/auth/profile
+ * Update current user's profile information
+ */
+router.put('/profile', extractSessionUser, async (req, res) => {
+  try {
+    const { name } = req.body;
+    const userId = req.userId;
+
+    if (!name || name.trim().length === 0) {
+      return res.status(400).json({ error: 'Name is required' });
+    }
+
+    if (name.length > 100) {
+      return res.status(400).json({ error: 'Name must be less than 100 characters' });
+    }
+
+    // Get provider from JWT token
+    const provider = req.user.provider || 'github';
+    const table = provider === 'google' ? 'google_users' : 'users';
+
+    // Update user name
+    const { data: updatedUser, error } = await supabaseAdmin
+      .from(table)
+      .update({ 
+        name: name.trim(),
+        updated_at: new Date().toISOString()
+      })
+      .eq('id', userId)
+      .select()
+      .single();
+
+    if (error) {
+      console.error('Profile update error:', error);
+      throw error;
+    }
+
+    if (!updatedUser) {
+      return res.status(404).json({ error: 'User not found' });
+    }
+
+    return res.json({
+      id: updatedUser.id,
+      name: updatedUser.name,
+      email: updatedUser.email,
+      provider: provider,
+    });
+  } catch (error) {
+    console.error('Profile update error:', error);
+    res.status(500).json({ error: 'Failed to update profile' });
+  }
+});
+
 router.get('/me', extractSessionUser, (req, res) => {
   try {
     // Session validation is done by the auth middleware
@@ -277,11 +335,16 @@ router.get('/me', extractSessionUser, (req, res) => {
       return res.status(401).json({ error: 'Not authenticated' });
     }
 
+    // Check if profile needs completion for Google users
+    const needsProfileCompletion = user.provider === 'google' && (!user.name || user.name === 'Google User' || user.name.trim().length === 0);
+
     return res.json({
       id: user.id,
       github_username: user.github_username || null,
       email: user.email,
       provider: user.provider || 'github',
+      name: user.name || null,
+      needs_profile_completion: needsProfileCompletion,
     });
   } catch (error) {
     res.status(401).json({ error: 'Invalid session' });

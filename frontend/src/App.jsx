@@ -11,6 +11,7 @@ import ContactPage from './pages/ContactPage';
 import GeneratePage from './pages/GeneratePage';
 import DashboardPage from './pages/DashboardPage';
 import LoginPage from './pages/LoginPage';
+import ProfileCompletionPage from './pages/ProfileCompletionPage';
 import PrivacyPage from './pages/PrivacyPage';
 import TermsPage from './pages/TermsPage';
 import NotFoundPage from './pages/NotFoundPage';
@@ -31,6 +32,14 @@ function App() {
               <Route path="/pricing" element={<PricingPage />} />
               <Route path="/contact" element={<ContactPage />} />
               <Route path="/login" element={<LoginPage />} />
+              <Route
+                path="/complete-profile"
+                element={
+                  <ProtectedRoute allowIncomplete={true}>
+                    <ProfileCompletionPage />
+                  </ProtectedRoute>
+                }
+              />
               <Route
                 path="/dashboard"
                 element={
