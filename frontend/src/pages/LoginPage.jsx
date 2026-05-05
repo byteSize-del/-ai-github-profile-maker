@@ -18,19 +18,16 @@ function LoginPage() {
   useEffect(() => {
     const code = searchParams.get('code');
     const provider = searchParams.get('provider');
-    
+
     if (code) {
-      // Provider from URL (backend redirect) or fallback to sessionStorage
-      // (direct frontend redirect where OAuth provider doesn't append provider param)
       const effectiveProvider = provider || sessionStorage.getItem('oauth_provider') || 'github';
-      
+
       if (effectiveProvider === 'google') {
         handleGoogleCallback(code);
       } else {
         handleGitHubCallback(code);
       }
-      
-      // Clean up sessionStorage after detecting provider
+
       sessionStorage.removeItem('oauth_provider');
     }
   }, [searchParams]);
@@ -68,10 +65,9 @@ function LoginPage() {
     }
 
     try {
-      // SECURITY: Get OAuth state from backend (stored in httpOnly cookie)
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
       const stateResponse = await fetch(`${apiUrl}/api/auth/oauth-state?provider=github`, {
-        credentials: 'include',  // Include cookies so backend can set oauth_state cookie
+        credentials: 'include',
       });
 
       if (!stateResponse.ok) {
@@ -79,11 +75,8 @@ function LoginPage() {
       }
 
       const { state } = await stateResponse.json();
-
-      // Remember provider so callback handler can distinguish from Google
       sessionStorage.setItem('oauth_provider', 'github');
 
-      // Redirect to GitHub with server-generated state
       const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}`;
       window.location.href = authUrl;
     } catch (err) {
@@ -95,8 +88,6 @@ function LoginPage() {
     try {
       setLoginError(null);
       const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:4000';
-      
-      // Get Google OAuth URL from backend
       const response = await fetch(`${apiUrl}/api/auth/google/url`, {
         credentials: 'include',
       });
@@ -106,10 +97,7 @@ function LoginPage() {
       }
 
       const { url } = await response.json();
-      
-      // Remember provider so callback handler can distinguish from GitHub
       sessionStorage.setItem('oauth_provider', 'google');
-      
       window.location.href = url;
     } catch (err) {
       setLoginError(err.message || 'Failed to initialize Google login');
@@ -122,7 +110,7 @@ function LoginPage() {
         <div className="login-container">
           <div className="login-card login-loading">
             <div className="spinner"></div>
-            <p>Please wait while we verify your authentication state.</p>
+            <p>Verifying your session...</p>
           </div>
         </div>
       </div>
@@ -133,61 +121,32 @@ function LoginPage() {
     <div className="login-page">
       <div className="login-container">
         <div className="login-card">
-          {/* Header */}
-          <div className="login-header">
-            <h1>AI GitHub Profile</h1>
-            <p>Sign in to your account</p>
+          {/* Brand */}
+          <div className="login-brand">
+            <div className="brand-icon">
+              <svg viewBox="0 0 24 24" fill="currentColor">
+                <path d="M12 2C6.48 2 2 6.48 2 12c0 4.84 3.44 8.87 8 9.8V15H8v-3h2V9.5C10 7.57 11.57 6 13.5 6H16v3h-2c-.55 0-1 .45-1 1v2h3l-.5 3H13v6.95c4.05-.5 7.2-3.95 7.2-8.15 0-5.52-4.48-10-10-10z" />
+              </svg>
+            </div>
+            <h1>ProfileForge</h1>
+            <p className="brand-tagline">AI-powered GitHub profiles</p>
           </div>
 
           {/* Content */}
-          <div className="login-content">
-            {/* Error Message */}
+          <div className="login-body">
+            {/* Error */}
             {(loginError || error) && (
               <div className="login-error">
                 <svg className="error-icon" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clipRule="evenodd" />
                 </svg>
-                <div>
-                  <strong>Authentication failed</strong>
-                  <p>{loginError || error}</p>
-                </div>
+                <span>{loginError || error}</span>
               </div>
             )}
 
-            {/* Features Preview */}
-            <div className="login-features">
-              <h3>What you get:</h3>
-              <ul>
-                <li>
-                  <svg fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  Secure dashboard
-                </li>
-                <li>
-                  <svg fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  30 daily credits
-                </li>
-                <li>
-                  <svg fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  AI-powered profiles
-                </li>
-                <li>
-                  <svg fill="currentColor" viewBox="0 0 20 20">
-                    <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
-                  </svg>
-                  Provider failover
-                </li>
-              </ul>
-            </div>
-
             {/* OAuth Buttons */}
             <div className="login-buttons">
-              <button 
+              <button
                 className="oauth-btn oauth-btn-github"
                 onClick={handleGitHubLogin}
                 disabled={loading}
@@ -198,7 +157,7 @@ function LoginPage() {
                 <span>Continue with GitHub</span>
               </button>
 
-              <button 
+              <button
                 className="oauth-btn oauth-btn-google"
                 onClick={handleGoogleLogin}
                 disabled={loading}
@@ -213,19 +172,27 @@ function LoginPage() {
               </button>
             </div>
 
-            {/* Divider */}
-            <div className="login-divider">
-              <span>or</span>
+            {/* Perks */}
+            <div className="login-perks">
+              <span className="perk-tag">
+                <svg fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                30 daily credits
+              </span>
+              <span className="perk-tag">
+                <svg fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                AI-powered
+              </span>
+              <span className="perk-tag">
+                <svg fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" /></svg>
+                Secure
+              </span>
             </div>
-
-            {/* Alternative Login Methods */}
-            <p className="login-alternative">More login options coming soon</p>
           </div>
 
           {/* Footer */}
           <div className="login-footer">
             <p className="login-terms">
-              By signing in, you agree to our <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a>
+              By signing in, you agree to our <a href="/terms">Terms</a> and <a href="/privacy">Privacy Policy</a>
             </p>
           </div>
         </div>
