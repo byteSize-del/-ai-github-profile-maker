@@ -6,6 +6,7 @@ import { authLimiter } from '../middleware/rateLimit.js';
 
 const router = Router();
 const isProduction = process.env.NODE_ENV === 'production';
+const FRONTEND_URL = process.env.FRONTEND_URL || (isProduction ? 'https://profileforge-ai.vercel.app' : 'http://localhost:5173');
 
 // SECURITY: Auth routes require authentication rate limiting
 router.use(authLimiter);
@@ -124,6 +125,32 @@ router.post('/callback', async (req, res) => {
     console.error('GitHub OAuth error:', error);
     // Don't expose internal error details to client
     res.status(500).json({ error: 'Authentication failed. Please try again.' });
+  }
+});
+
+/**
+ * GET /api/auth/callback/google
+ * Handle Google OAuth redirect from Google (when redirect_uri points to backend).
+ * Redirects to frontend login page with code and state as query params.
+ */
+router.get('/callback/google', (req, res) => {
+  try {
+    const { code, state } = req.query;
+
+    if (!code) {
+      return res.status(400).json({ error: 'Code is required' });
+    }
+
+    // Redirect to frontend login page with provider, code and state
+    const redirectUrl = new URL(`${FRONTEND_URL}/login`);
+    redirectUrl.searchParams.set('provider', 'google');
+    redirectUrl.searchParams.set('code', code);
+    if (state) redirectUrl.searchParams.set('state', state);
+
+    return res.redirect(redirectUrl.toString());
+  } catch (error) {
+    console.error('Google OAuth redirect error:', error);
+    res.status(500).json({ error: 'Authentication redirect failed' });
   }
 });
 

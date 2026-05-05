@@ -20,11 +20,18 @@ function LoginPage() {
     const provider = searchParams.get('provider');
     
     if (code) {
-      if (provider === 'google') {
+      // Provider from URL (backend redirect) or fallback to sessionStorage
+      // (direct frontend redirect where OAuth provider doesn't append provider param)
+      const effectiveProvider = provider || sessionStorage.getItem('oauth_provider') || 'github';
+      
+      if (effectiveProvider === 'google') {
         handleGoogleCallback(code);
       } else {
         handleGitHubCallback(code);
       }
+      
+      // Clean up sessionStorage after detecting provider
+      sessionStorage.removeItem('oauth_provider');
     }
   }, [searchParams]);
 
@@ -73,6 +80,9 @@ function LoginPage() {
 
       const { state } = await stateResponse.json();
 
+      // Remember provider so callback handler can distinguish from Google
+      sessionStorage.setItem('oauth_provider', 'github');
+
       // Redirect to GitHub with server-generated state
       const authUrl = `https://github.com/login/oauth/authorize?client_id=${clientId}&redirect_uri=${encodeURIComponent(redirectUri)}&scope=${encodeURIComponent(scope)}&state=${encodeURIComponent(state)}`;
       window.location.href = authUrl;
@@ -96,6 +106,10 @@ function LoginPage() {
       }
 
       const { url } = await response.json();
+      
+      // Remember provider so callback handler can distinguish from GitHub
+      sessionStorage.setItem('oauth_provider', 'google');
+      
       window.location.href = url;
     } catch (err) {
       setLoginError(err.message || 'Failed to initialize Google login');
