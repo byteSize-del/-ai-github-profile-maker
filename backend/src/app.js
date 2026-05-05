@@ -60,7 +60,7 @@ const corsOptions = {
     }
   },
   credentials: true,  // Allow cookies
-  methods: ['GET', 'POST', 'OPTIONS'],
+  methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization'],
   maxAge: 3600,  // Preflight cache 1 hour
 };
