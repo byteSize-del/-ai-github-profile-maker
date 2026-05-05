@@ -151,12 +151,14 @@ app.listen(PORT, () => {
   console.log(`🚀 Server running on port ${PORT}`);
   console.log(`📊 Health check: http://localhost:${PORT}/health`);
   console.log(`🔒 Security: CORS restricted to ${ALLOWED_ORIGINS.length} origin(s)`);
-  console.log(
-    `🔑 Provider key pool summary: ` +
-    `groq=${providerSummary.groq.totalUnique} (legacy=${providerSummary.groq.hasLegacySingle}, list=${providerSummary.groq.listCount}, numbered=${providerSummary.groq.numberedCount}), ` +
-    `openrouter=${providerSummary.openrouter.totalUnique} (legacy=${providerSummary.openrouter.hasLegacySingle}, list=${providerSummary.openrouter.listCount}, numbered=${providerSummary.openrouter.numberedCount}), ` +
-    `nvidia=${providerSummary.nvidia.totalUnique} (legacy=${providerSummary.nvidia.hasLegacySingle}, list=${providerSummary.nvidia.listCount}, numbered=${providerSummary.nvidia.numberedCount})`
-  );
+  if (process.env.NODE_ENV !== 'production') {
+    console.log(
+      `🔑 Provider key pool summary: ` +
+      `groq=${providerSummary.groq.totalUnique} (legacy=${providerSummary.groq.hasLegacySingle}, list=${providerSummary.groq.listCount}, numbered=${providerSummary.groq.numberedCount}), ` +
+      `openrouter=${providerSummary.openrouter.totalUnique} (legacy=${providerSummary.openrouter.hasLegacySingle}, list=${providerSummary.openrouter.listCount}, numbered=${providerSummary.openrouter.numberedCount}), ` +
+      `nvidia=${providerSummary.nvidia.totalUnique} (legacy=${providerSummary.nvidia.hasLegacySingle}, list=${providerSummary.nvidia.listCount}, numbered=${providerSummary.nvidia.numberedCount})`
+    );
+  }
 });
 
 export default app;

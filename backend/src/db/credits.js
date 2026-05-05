@@ -76,23 +76,3 @@ export function deductCredits(userId) {
 export function resetCredits(userId) {
   creditStore.delete(userId);
 }
-
-// For debugging/admin purposes
-export function getAllCredits() {
-  return Object.fromEntries(creditStore);
-}
-
-// Optional: Function to set credits for a user (admin use)
-export function setcredits(userId, credits){
-  let userCredits = creditStore.get(userId);
-  if (!userCredits){
-    userCredits = {
-      count : credits,
-      lastReset : new Date().toDateString()
-    }
-  } else{
-    userCredits.count = credits;
-    userCredits.lastReset = new Date().toDateString();
-  }
-  creditStore.set(userId, userCredits);
-}
