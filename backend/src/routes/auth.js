@@ -48,10 +48,10 @@ const authCookieOptions = {
   sameSite: isProduction ? 'none' : 'lax',
   // CHIPS: partition cookie for third-party contexts in modern browsers
   partitioned: isProduction ? true : undefined,
-  // Enhanced security settings
+  // No domain restriction - cookie scoped to backend host automatically
+  // This ensures cookies are sent back to the backend from cross-origin frontend
   maxAge: 24 * 60 * 60 * 1000, // Explicit 24-hour expiration
-  domain: isProduction ? '.vercel.app' : undefined, // Restrict to domain in production
-  path: '/', // Restrict to root path
+  path: '/', // Available for all paths
 };
 
 /**

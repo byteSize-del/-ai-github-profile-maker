@@ -40,7 +40,8 @@ function validateRedirectUri(uri) {
       const url = new URL(uri);
       
       // Must be HTTPS in production (except localhost)
-      if (!url.protocol.startsWith('https://') && !url.hostname.includes('localhost')) {
+      // Note: url.protocol returns 'https:' not 'https://'
+      if (url.protocol !== 'https:' && !url.hostname.includes('localhost')) {
         return false;
       }
       
