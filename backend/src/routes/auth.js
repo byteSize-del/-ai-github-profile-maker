@@ -16,6 +16,8 @@ const authCookieOptions = {
   secure: isProduction,
   // Cross-site frontend (Vercel) -> backend (Render) requires SameSite=None in production.
   sameSite: isProduction ? 'none' : 'lax',
+  // CHIPS: partition cookie for third-party contexts in modern browsers
+  partitioned: isProduction ? true : undefined,
 };
 
 /**
@@ -209,9 +211,17 @@ router.post('/callback/google', async (req, res) => {
       name: supabaseUser.name,
     });
   } catch (error) {
-    console.error('Google OAuth error:', error);
-    // Don't expose internal error details to client
-    res.status(500).json({ error: 'Authentication failed. Please try again.' });
+    console.error('Google OAuth error:', error.message || error);
+    // Return a slightly more helpful error without exposing secrets
+    let message = 'Authentication failed. Please try again.';
+    if (error.message?.includes('credentials not configured')) {
+      message = 'Google login is not configured on this server.';
+    } else if (error.message?.includes('redirect_uri_mismatch')) {
+      message = 'OAuth configuration error: redirect URI mismatch.';
+    } else if (error.message?.includes('Invalid state')) {
+      message = 'Session expired. Please try logging in again.';
+    }
+    res.status(500).json({ error: message });
   }
 });
 
