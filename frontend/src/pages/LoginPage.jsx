@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate, useSearchParams } from 'react-router-dom';
 import { useAuth } from '../hooks/useAuth';
+import './LoginPage.css';
 
 function LoginPage() {
   const navigate = useNavigate();
@@ -103,10 +104,10 @@ function LoginPage() {
 
   if (loading) {
     return (
-      <div className="auth-page">
-        <div className="auth-card">
-          <div className="auth-main">
-            <h1>Loading account session</h1>
+      <div className="login-page">
+        <div className="login-container">
+          <div className="login-card login-loading">
+            <div className="spinner"></div>
             <p>Please wait while we verify your authentication state.</p>
           </div>
         </div>
