@@ -9,6 +9,50 @@ const FRONTEND_URL = process.env.FRONTEND_URL || (isProduction ? 'https://profil
 const GOOGLE_CALLBACK_URL = process.env.GOOGLE_CALLBACK_URL || `${FRONTEND_URL}/login`;
 
 /**
+ * Validate redirect URI against strict allowlist
+ * SECURITY: Prevents OAuth redirect manipulation attacks
+ */
+function validateRedirectUri(uri) {
+  const allowedOrigins = [
+    process.env.FRONTEND_URL,
+    'https://ai-github-profile-frontend.vercel.app',
+    'https://ai-github-profile-maker.vercel.app',
+    'https://profileforge-ai.vercel.app',
+    // Development only
+    'http://localhost:5173',
+    'http://127.0.0.1:5173',
+  ].filter(Boolean);
+
+  try {
+    const url = new URL(uri);
+    return allowedOrigins.some(allowed => {
+      const allowedUrl = new URL(allowed);
+      return url.origin === allowedUrl.origin;
+    });
+  } catch {
+    return false;
+  }
+}
+
+/**
+ * Validate OAuth configuration on startup
+ * SECURITY: Fail fast if configuration is insecure
+ */
+if (GOOGLE_CALLBACK_URL) {
+  if (!validateRedirectUri(GOOGLE_CALLBACK_URL)) {
+    console.error('🔴 CRITICAL SECURITY: Invalid Google OAuth callback URL configuration');
+    console.error('Callback URL must be one of the allowed origins');
+    process.exit(1);
+  }
+  
+  // Enforce HTTPS in production
+  if (isProduction && !GOOGLE_CALLBACK_URL.startsWith('https://') && !GOOGLE_CALLBACK_URL.includes('localhost')) {
+    console.error('🔴 SECURITY: Google callback URL must be HTTPS in production');
+    process.exit(1);
+  }
+}
+
+/**
  * Generate a random state token for CSRF protection
  * SECURITY: Prevents CSRF attacks by verifying OAuth request origin
  */
@@ -34,6 +78,11 @@ export function validateOAuthState(providedState, storedState) {
  * Get Google OAuth authorization URL
  */
 export function getGoogleAuthUrl(state) {
+  // Validate redirect URI before use
+  if (!validateRedirectUri(GOOGLE_CALLBACK_URL)) {
+    throw new Error('Invalid redirect URI configuration');
+  }
+
   const params = new URLSearchParams({
     client_id: GOOGLE_CLIENT_ID,
     redirect_uri: GOOGLE_CALLBACK_URL,
@@ -75,7 +124,14 @@ export async function exchangeGoogleCode(code) {
 
   if (!tokenResponse.ok) {
     const error = await tokenResponse.json();
-    throw new Error(error.error_description || 'Failed to exchange Google code');
+    // Log full error internally for debugging
+    console.error('Google OAuth token exchange error:', {
+      status: tokenResponse.status,
+      error: error,
+      timestamp: new Date().toISOString()
+    });
+    // Return generic error to client to prevent information disclosure
+    throw new Error('OAuth token exchange failed');
   }
 
   const tokenData = await tokenResponse.json();
@@ -100,7 +156,12 @@ export async function getGoogleUserInfo(tokenData) {
   });
 
   if (!userResponse.ok) {
-    throw new Error('Failed to fetch Google user info');
+    console.error('Google OAuth user info error:', {
+      status: userResponse.status,
+      statusText: userResponse.statusText,
+      timestamp: new Date().toISOString()
+    });
+    throw new Error('Failed to retrieve user information');
   }
 
   const userData = await userResponse.json();
@@ -144,7 +205,12 @@ export async function getOrCreateSupabaseUser(googleUserData) {
       .single();
 
     if (error) throw error;
-    return updatedUser;
+    // Ensure provider field is present for JWT token
+    return {
+      ...updatedUser,
+      provider: 'google',
+      github_username: null // Explicitly set for JWT compatibility
+    };
   }
 
   // Create new user in google_users table
@@ -172,5 +238,10 @@ export async function getOrCreateSupabaseUser(googleUserData) {
     throw error;
   }
 
-  return newUser;
+  // Ensure provider field is present for JWT token
+  return {
+    ...newUser,
+    provider: 'google',
+    github_username: null // Explicitly set for JWT compatibility
+  };
 }

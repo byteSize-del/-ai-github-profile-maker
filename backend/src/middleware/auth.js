@@ -23,6 +23,11 @@ export function extractSessionUser(req, res, next) {
       maxAge: '24h'  // Force re-authentication after 24 hours
     });
     
+    // Validate token structure
+    if (!sessionData.provider || !['github', 'google'].includes(sessionData.provider)) {
+      return res.status(401).json({ error: 'Invalid session provider' });
+    }
+    
     // Attach verified user data to request
     req.user = sessionData;
     req.userId = sessionData.id;  // Use verified user ID, not client-provided
@@ -81,7 +86,8 @@ export function createSessionToken(userData) {
   const token = jwt.sign(
     {
       id: userData.id,
-      github_username: userData.github_username,
+      github_username: userData.github_username || null,
+      provider: userData.provider || 'github',
       email: userData.email,
     },
     jwtSecret,

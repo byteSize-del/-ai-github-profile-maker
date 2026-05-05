@@ -14,10 +14,52 @@ export const limiter = rateLimit({
 export const authLimiter = rateLimit({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 5, // Only 5 attempts per 15 minutes
-  message: 'Too many authentication attempts, please try again later.',
-  skipSuccessfulRequests: true, // Don't count successful requests
   standardHeaders: true,
   legacyHeaders: false,
+});
+
+// OAuth-specific rate limiting to prevent token flooding and CSRF attacks
+export const oauthLimiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 20, // Limit each IP to 20 OAuth requests per windowMs
+  message: {
+    error: 'Too many OAuth attempts, please try again after 15 minutes.',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  // Add progressive delays for repeated violations
+  keyGenerator: (req) => {
+    // Use IP + user agent for more specific limiting
+    return `${req.ip}:${req.get('User-Agent') || 'unknown'}`;
+  },
+  // Custom handler for rate limit exceeded
+  handler: (req, res) => {
+    console.warn(`🚨 OAuth rate limit exceeded for IP: ${req.ip}, UA: ${req.get('User-Agent')}`);
+    res.status(429).json({
+      error: 'Too many OAuth attempts',
+      retryAfter: '15 minutes',
+      code: 'RATE_LIMIT_EXCEEDED'
+    });
+  }
+});
+
+// Even stricter rate limiting for OAuth state generation
+export const oauthStateLimiter = rateLimit({
+  windowMs: 10 * 60 * 1000, // 10 minutes
+  max: 10, // Limit each IP to 10 state requests per windowMs
+  message: {
+    error: 'Too many OAuth state requests, please try again after 10 minutes.',
+  },
+  standardHeaders: true,
+  legacyHeaders: false,
+  handler: (req, res) => {
+    console.warn(`🚨 OAuth state generation rate limit exceeded for IP: ${req.ip}`);
+    res.status(429).json({
+      error: 'Too many OAuth state requests',
+      retryAfter: '10 minutes',
+      code: 'STATE_RATE_LIMIT_EXCEEDED'
+    });
+  }
 });
 
 // SECURITY: Strict rate limiter for API generation

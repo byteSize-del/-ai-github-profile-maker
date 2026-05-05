@@ -1,12 +1,42 @@
 import { Router } from 'express';
+import Joi from 'joi';
 import { exchangeGitHubCode, getGitHubUserInfo, getOrCreateSupabaseUser as getOrCreateGitHubUser, generateOAuthState as generateGitHubState, validateOAuthState as validateGitHubState } from '../services/github.js';
 import { exchangeGoogleCode, getGoogleUserInfo, getOrCreateSupabaseUser as getOrCreateGoogleUser, generateOAuthState as generateGoogleState, validateOAuthState as validateGoogleState, getGoogleAuthUrl } from '../services/google.js';
 import { createSessionToken, extractSessionUser } from '../middleware/auth.js';
-import { authLimiter } from '../middleware/rateLimit.js';
+import { authLimiter, oauthStateLimiter } from '../middleware/rateLimit.js';
 
 const router = Router();
 const isProduction = process.env.NODE_ENV === 'production';
 const FRONTEND_URL = process.env.FRONTEND_URL || (isProduction ? 'https://profileforge-ai.vercel.app' : 'http://localhost:5173');
+
+/**
+ * Input validation schemas for OAuth callbacks
+ * SECURITY: Prevent injection attacks and malformed requests
+ */
+const oauthCallbackSchema = Joi.object({
+  code: Joi.string().pattern(/^[a-zA-Z0-9_\-\/+=]+$/).required().messages({
+    'string.pattern.base': 'Invalid authorization code format',
+    'any.required': 'Authorization code is required'
+  }),
+  state: Joi.string().pattern(/^[a-zA-Z0-9]+$/).required().messages({
+    'string.pattern.base': 'Invalid state token format',
+    'any.required': 'State token is required'
+  })
+});
+
+const validateInput = (schema) => {
+  return (req, res, next) => {
+    const { error, value } = schema.validate(req.body);
+    if (error) {
+      return res.status(400).json({
+        error: 'Invalid parameters',
+        details: error.details.map(d => d.message)
+      });
+    }
+    req.validatedBody = value;
+    next();
+  };
+};
 
 // SECURITY: Auth routes require authentication rate limiting
 router.use(authLimiter);
@@ -18,13 +48,17 @@ const authCookieOptions = {
   sameSite: isProduction ? 'none' : 'lax',
   // CHIPS: partition cookie for third-party contexts in modern browsers
   partitioned: isProduction ? true : undefined,
+  // Enhanced security settings
+  maxAge: 24 * 60 * 60 * 1000, // Explicit 24-hour expiration
+  domain: isProduction ? '.vercel.app' : undefined, // Restrict to domain in production
+  path: '/', // Restrict to root path
 };
 
 /**
  * GET /api/auth/oauth-state?provider=github|google
  * Generate OAuth state token for CSRF protection
  */
-router.get('/oauth-state', (req, res) => {
+router.get('/oauth-state', oauthStateLimiter, (req, res) => {
   try {
     const provider = req.query.provider || 'github';
     
@@ -51,7 +85,7 @@ router.get('/oauth-state', (req, res) => {
  * GET /api/auth/google/url
  * Get Google OAuth authorization URL
  */
-router.get('/google/url', (req, res) => {
+router.get('/google/url', oauthStateLimiter, (req, res) => {
   try {
     const state = generateGoogleState();
     
@@ -73,13 +107,9 @@ router.get('/google/url', (req, res) => {
  * POST /api/auth/callback
  * Handle GitHub OAuth callback with CSRF protection
  */
-router.post('/callback', async (req, res) => {
+router.post('/callback', validateInput(oauthCallbackSchema), async (req, res) => {
   try {
-    const { code, state } = req.body;
-
-    if (!code) {
-      return res.status(400).json({ error: 'Code is required' });
-    }
+    const { code, state } = req.validatedBody;
 
     // Validate OAuth state for CSRF protection
     const storedState = req.cookies?.oauth_state;
@@ -120,8 +150,9 @@ router.post('/callback', async (req, res) => {
     // Return minimal user data (don't expose token in response)
     return res.json({
       id: supabaseUser.id,
-      github_username: supabaseUser.github_username,
+      github_username: supabaseUser.github_username || null,
       email: supabaseUser.email,
+      provider: supabaseUser.provider || 'github',
     });
   } catch (error) {
     console.error('GitHub OAuth error:', error);
@@ -160,13 +191,9 @@ router.get('/callback/google', (req, res) => {
  * POST /api/auth/callback/google
  * Handle Google OAuth callback with CSRF protection
  */
-router.post('/callback/google', async (req, res) => {
+router.post('/callback/google', validateInput(oauthCallbackSchema), async (req, res) => {
   try {
-    const { code, state } = req.body;
-
-    if (!code) {
-      return res.status(400).json({ error: 'Code is required' });
-    }
+    const { code, state } = req.validatedBody;
 
     // Validate OAuth state for CSRF protection
     const storedState = req.cookies?.oauth_state;
@@ -209,6 +236,8 @@ router.post('/callback/google', async (req, res) => {
       id: supabaseUser.id,
       email: supabaseUser.email,
       name: supabaseUser.name,
+      github_username: supabaseUser.github_username || null,
+      provider: supabaseUser.provider || 'google',
     });
   } catch (error) {
     console.error('Google OAuth error:', error.message || error);
@@ -240,8 +269,9 @@ router.get('/me', extractSessionUser, (req, res) => {
 
     return res.json({
       id: user.id,
-      github_username: user.github_username,
+      github_username: user.github_username || null,
       email: user.email,
+      provider: user.provider || 'github',
     });
   } catch (error) {
     res.status(401).json({ error: 'Invalid session' });

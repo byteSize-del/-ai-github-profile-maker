@@ -114,7 +114,11 @@ export async function getOrCreateSupabaseUser(gitHubUserData) {
     .single();
 
   if (existingUser) {
-    return existingUser;
+    // Ensure provider field is present for JWT token consistency
+    return {
+      ...existingUser,
+      provider: 'github'
+    };
   }
 
   // Create new user with a proper UUID
@@ -138,5 +142,9 @@ export async function getOrCreateSupabaseUser(gitHubUserData) {
     throw error;
   }
 
-  return newUser;
+  // Ensure provider field is present for JWT token consistency
+  return {
+    ...newUser,
+    provider: 'github'
+  };
 }
