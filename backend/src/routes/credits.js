@@ -15,7 +15,7 @@ router.get('/', extractSessionUser, async (req, res) => {
     res.json({ credits, resetAt });
   } catch (error) {
     console.error('Credits fetch error:', error.message);
-    res.status(500).json({ error: 'Failed to fetch credits' });
+    res.status(500).json({ error: error.message });
   }
 });
 

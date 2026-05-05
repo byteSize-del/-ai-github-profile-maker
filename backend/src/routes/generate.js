@@ -167,25 +167,16 @@ function ensureStatsRendered(readme, urls, profileStyle, correctUsername) {
       }
     });
 
-    // SECURITY: Only replace username/user params inside known stats domains.
-    // This prevents SSRF if the AI generates malicious URLs with username params.
-    const allowedStatsDomains = [
-      'github-readme-stats.shion.dev',
-      'github-readme-stats.vercel.app',
-      'streak-stats.demolab.com',
-      'komarev.com',
-    ];
-    const statsUrlRegex = new RegExp(
-      `https://(?:${allowedStatsDomains.map(d => d.replace(/\./g, '\\.')).join('|')})[^"'\\s]*`,
-      'gi',
-    );
-    result = result.replace(statsUrlRegex, (url) => {
-      return url.replace(/\b(username|user)=([^&"]+)/gi, (match, param, value) => {
-        if (value !== correctUsername) {
-          return `${param}=${correctUsername}`;
-        }
-        return match;
-      });
+    // Additional catch: Find ANY URL that contains username/user parameter with wrong value
+    // This catches edge cases where AI generates custom URLs
+    const urlPattern = /(username|user)=([^&"]+)/gi;
+    result = result.replace(urlPattern, (match, param, value) => {
+      // Only replace if it's not already the correct username
+      if (value !== correctUsername) {
+        console.log(`[Post-Process] ⚠️ Found wrong username "${value}" in URL, replacing with "${correctUsername}"`);
+        return `${param}=${correctUsername}`;
+      }
+      return match;
     });
 
     // Log final URLs for debugging
