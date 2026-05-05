@@ -123,18 +123,17 @@ export async function getOrCreateSupabaseUser(googleUserData) {
     throw new Error('Supabase not configured');
   }
 
-  // Look up user by email
+  // Look up user by email in google_users table
   const { data: existingUser } = await supabaseAdmin
-    .from('users')
+    .from('google_users')
     .select('*')
     .eq('email', googleUserData.email)
-    .eq('provider', 'google')
     .single();
 
   if (existingUser) {
     // Update user data
     const { data: updatedUser, error } = await supabaseAdmin
-      .from('users')
+      .from('google_users')
       .update({
         name: googleUserData.name,
         avatar_url: googleUserData.picture,
@@ -148,10 +147,10 @@ export async function getOrCreateSupabaseUser(googleUserData) {
     return updatedUser;
   }
 
-  // Create new user
+  // Create new user in google_users table
   const userId = uuidv4();
   const { data: newUser, error } = await supabaseAdmin
-    .from('users')
+    .from('google_users')
     .insert([
       {
         id: userId,

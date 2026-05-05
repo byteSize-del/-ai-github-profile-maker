@@ -1,4 +1,5 @@
 import { supabaseAdmin } from '../utils/supabase.js';
+import { getUserById, updateUserById } from '../utils/users.js';
 
 const DAILY_CREDITS = parseInt(process.env.DAILY_CREDITS) || 30;
 const CREDITS_PER_USE = parseInt(process.env.CREDITS_PER_USE) || 15;
@@ -12,17 +13,8 @@ export async function getOrCreateUser(userId, githubUsername, email = null) {
     throw new Error('Supabase not configured');
   }
 
-  // Try to get existing user
-  const { data: existingUser, error: selectError } = await supabaseAdmin
-    .from('users')
-    .select('*')
-    .eq('id', userId)
-    .single();
-
-  if (selectError && selectError.code !== 'PGRST116') {
-    // Error other than "not found"
-    throw selectError;
-  }
+  // Try to get existing user from either table
+  const existingUser = await getUserById(userId);
 
   if (existingUser) {
     // Check if credits need reset
@@ -67,20 +59,11 @@ async function checkAndResetCredits(user) {
     now.getUTCDate() !== lastReset.getUTCDate()
   ) {
     // Reset credits
-    const { data: updatedUser, error } = await supabaseAdmin
-      .from('users')
-      .update({
-        credits_available: DAILY_CREDITS,
-        credits_used: 0,
-        last_credit_reset: now.toISOString(),
-      })
-      .eq('id', user.id)
-      .select()
-      .single();
-
-    if (error) {
-      throw error;
-    }
+    const updatedUser = await updateUserById(user.id, {
+      credits_available: DAILY_CREDITS,
+      credits_used: 0,
+      last_credit_reset: now.toISOString(),
+    });
 
     return updatedUser;
   }
@@ -96,15 +79,7 @@ export async function getCredits(userId) {
     throw new Error('Supabase not configured');
   }
 
-  const { data: user, error } = await supabaseAdmin
-    .from('users')
-    .select('id, credits_available, last_credit_reset')
-    .eq('id', userId)
-    .single();
-
-  if (error) {
-    throw error;
-  }
+  const user = await getUserById(userId);
 
   if (!user) {
     throw new Error('User not found');
@@ -131,15 +106,7 @@ export async function deductCredits(userId, generationId = null, reason = null) 
   }
 
   // Get current user
-  const { data: user, error: getUserError } = await supabaseAdmin
-    .from('users')
-    .select('*')
-    .eq('id', userId)
-    .single();
-
-  if (getUserError) {
-    throw getUserError;
-  }
+  const user = await getUserById(userId);
 
   if (!user) {
     throw new Error('User not found');
@@ -154,21 +121,11 @@ export async function deductCredits(userId, generationId = null, reason = null) 
   const newCreditsAvailable = user.credits_available - CREDITS_PER_USE;
   const newCreditsUsed = user.credits_used + CREDITS_PER_USE;
 
-  const { data: updatedUsers, error: updateError } = await supabaseAdmin
-    .from('users')
-    .update({
-      credits_available: newCreditsAvailable,
-      credits_used: newCreditsUsed,
-      total_generations: user.total_generations + 1,
-    })
-    .eq('id', userId)
-    .select();
-
-  if (updateError) {
-    throw updateError;
-  }
-
-  const updatedUser = Array.isArray(updatedUsers) ? updatedUsers[0] : updatedUsers;
+  const updatedUser = await updateUserById(userId, {
+    credits_available: newCreditsAvailable,
+    credits_used: newCreditsUsed,
+    total_generations: user.total_generations + 1,
+  });
 
   // Log credit transaction
   const { error: logError } = await supabaseAdmin
