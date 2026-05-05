@@ -38,8 +38,8 @@ const validateInput = (schema) => {
   };
 };
 
-// SECURITY: Auth routes require authentication rate limiting
-router.use(authLimiter);
+// Note: Rate limiting is applied per-route, not globally
+// to allow frequent auth checks on /me while protecting sensitive endpoints
 
 const authCookieOptions = {
   httpOnly: true,
@@ -117,7 +117,7 @@ router.get('/google/url', oauthStateLimiter, (req, res) => {
  * POST /api/auth/callback
  * Handle GitHub OAuth callback with CSRF protection
  */
-router.post('/callback', validateInput(oauthCallbackSchema), async (req, res) => {
+router.post('/callback', authLimiter, validateInput(oauthCallbackSchema), async (req, res) => {
   try {
     const { code, state } = req.validatedBody;
 
@@ -201,7 +201,7 @@ router.get('/callback/google', (req, res) => {
  * POST /api/auth/callback/google
  * Handle Google OAuth callback with CSRF protection
  */
-router.post('/callback/google', validateInput(oauthCallbackSchema), async (req, res) => {
+router.post('/callback/google', authLimiter, validateInput(oauthCallbackSchema), async (req, res) => {
   try {
     const { code, state } = req.validatedBody;
 
