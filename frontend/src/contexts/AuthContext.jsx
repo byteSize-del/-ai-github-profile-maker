@@ -35,11 +35,17 @@ export function AuthProvider({ children }) {
     }
   }, [apiUrl]);
 
-  const login = useCallback(async (code, state) => {
+  const login = useCallback(async (code, state, provider = 'github') => {
     try {
       setLoading(true);
       setError(null);
-      const response = await fetch(`${apiUrl}/api/auth/callback`, {
+      
+      // Determine the endpoint based on provider
+      const endpoint = provider === 'google' 
+        ? `${apiUrl}/api/auth/callback/google`
+        : `${apiUrl}/api/auth/callback`;
+      
+      const response = await fetch(endpoint, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         credentials: 'include',
